@@ -1,0 +1,24 @@
+{
+  "id" : "TC008",
+  "title" : "Get non-existent post ID=9999 returns 404",
+  "type" : "api",
+  "tags" : [ "negative", "posts", "get" ],
+  "expected" : "GET /posts/9999 returns HTTP 404 when the post does not exist",
+  "steps" : null,
+  "request" : {
+    "method" : "GET",
+    "url" : "https://jsonplaceholder.typicode.com/posts/9999",
+    "params" : { },
+    "headers" : {
+      "Accept" : "application/json"
+    },
+    "body" : ""
+  },
+  "assertions" : [ {
+    "type" : "status_code",
+    "path" : "",
+    "expected" : "404"
+  } ],
+  "uiTest" : false,
+  "apiTest" : true
+}

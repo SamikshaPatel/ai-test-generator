@@ -1,0 +1,24 @@
+{
+  "id" : "TC007",
+  "title" : "Get non-existent todo ID=9999 returns 404",
+  "type" : "api",
+  "tags" : [ "negative", "todos", "get" ],
+  "expected" : "GET /todos/9999 returns HTTP 404 when the todo does not exist",
+  "steps" : null,
+  "request" : {
+    "method" : "GET",
+    "url" : "https://jsonplaceholder.typicode.com/todos/9999",
+    "params" : { },
+    "headers" : {
+      "Accept" : "application/json"
+    },
+    "body" : ""
+  },
+  "assertions" : [ {
+    "type" : "status_code",
+    "path" : "",
+    "expected" : "404"
+  } ],
+  "uiTest" : false,
+  "apiTest" : true
+}

@@ -1,0 +1,67 @@
+{
+  "id" : "TC003",
+  "title" : "Checkout step 1 requires all fields to continue",
+  "type" : "ui",
+  "tags" : [ "negative", "checkout", "validation" ],
+  "expected" : "Clicking Continue on checkout step 1 without filling fields shows an error",
+  "steps" : [ {
+    "action" : "navigate",
+    "target" : "${BASE_URL}",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "fill",
+    "target" : "username_input",
+    "value" : "${LOGIN_USER}",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "fill",
+    "target" : "password_input",
+    "value" : "${LOGIN_PASS}",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : "login_button",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "wait_for",
+    "target" : "inventory_list",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : "add_to_cart",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : "cart_link",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : ".checkout_button",
+    "value" : "",
+    "fallbackTargets" : [ "[data-test='checkout']" ]
+  }, {
+    "action" : "assert_url_contains",
+    "target" : "checkout-step-one.html",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : "[data-test='continue']",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "assert_visible",
+    "target" : "[data-test='error']",
+    "value" : "",
+    "fallbackTargets" : [ ".error-message-container h3" ]
+  } ],
+  "request" : null,
+  "assertions" : null,
+  "uiTest" : true,
+  "apiTest" : false
+}

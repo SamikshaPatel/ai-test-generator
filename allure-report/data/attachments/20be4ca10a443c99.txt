@@ -1,0 +1,9 @@
+AI Test Generation Summary
+===========================
+Model Used    : claude.ai subscription (file mode)
+Generated At  : 2026-06-29T17:22:47.387010913Z
+Story Source  : file:src/main/resources/stories/generated/checkout-e2e-tests.json
+Retry Count   : 0
+Total Tests   : 5
+  UI Tests    : 5
+  API Tests   : 0

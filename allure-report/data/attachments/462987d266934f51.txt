@@ -1,0 +1,50 @@
+=== REQUEST ===
+GET https://jsonplaceholder.typicode.com/posts/1/comments
+Headers:
+  Accept: application/json
+
+=== RESPONSE ===
+Status : 200
+Headers: {Server=cloudflare, Cf-Cache-Status=HIT, X-Ratelimit-Reset=1782640445, Etag=W/"5e6-4bSPS5tq8F8ZDeFJULWh6upjp7U", Report-To={"group":"heroku-nel","endpoints":[{"url":"https://nel.heroku.com/reports?s=KROUYAKk7eZusJotHdtW0JF2qlcO5m6j1n5z79j2ZrE%3D\u0026sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d\u0026ts=1782640434"}],"max_age":3600}, Access-Control-Allow-Credentials=true, Content-Encoding=gzip, Content-Length=657, Age=9171, X-Powered-By=Express, Content-Type=application/json; charset=utf-8, CF-RAY=a1369dd1ab3b70a3-DFW, X-Ratelimit-Remaining=993, X-Content-Type-Options=nosniff, Connection=keep-alive, Reporting-Endpoints=heroku-nel="https://nel.heroku.com/reports?s=KROUYAKk7eZusJotHdtW0JF2qlcO5m6j1n5z79j2ZrE%3D&sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d&ts=1782640434", Pragma=no-cache, Date=Mon, 29 Jun 2026 17:22:59 GMT, Via=2.0 heroku-router, Accept-Ranges=bytes, X-Ratelimit-Limit=1000, Nel={"report_to":"heroku-nel","response_headers":["Via"],"max_age":3600,"success_fraction":0.01,"failure_fraction":0.1}, Cache-Control=max-age=43200, Vary=Origin, Accept-Encoding, Expires=-1, alt-svc=h3=":443"; ma=86400}
+Body:
+[
+    {
+        "postId": 1,
+        "id": 1,
+        "name": "id labore ex et quam laborum",
+        "email": "Eliseo@gardner.biz",
+        "body": "laudantium enim quasi est quidem magnam voluptate ipsam eos\ntempora quo necessitatibus\ndolor quam autem quasi\nreiciendis et nam sapiente accusantium"
+    },
+    {
+        "postId": 1,
+        "id": 2,
+        "name": "quo vero reiciendis velit similique earum",
+        "email": "Jayne_Kuhic@sydney.com",
+        "body": "est natus enim nihil est dolore omnis voluptatem numquam\net omnis occaecati quod ullam at\nvoluptatem error expedita pariatur\nnihil sint nostrum voluptatem reiciendis et"
+    },
+    {
+        "postId": 1,
+        "id": 3,
+        "name": "odio adipisci rerum aut animi",
+        "email": "Nikita@garfield.biz",
+        "body": "quia molestiae reprehenderit quasi aspernatur\naut expedita occaecati aliquam eveniet laudantium\nomnis quibusdam delectus saepe quia accusamus maiores nam est\ncum et ducimus et vero voluptates excepturi deleniti ratione"
+    },
+    {
+        "postId": 1,
+        "id": 4,
+        "name": "alias odio sit",
+        "email": "Lew@alysha.tv",
+        "body": "non et atque\noccaecati deserunt quas accusantium unde odit nobis qui voluptatem\nquia voluptas consequuntur itaque dolor\net qui rerum deleniti ut occaecati"
+    },
+    {
+        "postId": 1,
+        "id": 5,
+        "name": "vero eaque aliquid doloribus et culpa",
+        "email": "Hayden@althea.biz",
+        "body": "harum non quasi et ratione\ntempore iure ex voluptates in ratione\nharum architecto fugit inventore cupiditate\nvoluptates magni quo et"
+    }
+]
+
+=== cURL REPRODUCTION ===
+curl -X GET "https://jsonplaceholder.typicode.com/posts/1/comments" \
+  -H "Accept: application/json"

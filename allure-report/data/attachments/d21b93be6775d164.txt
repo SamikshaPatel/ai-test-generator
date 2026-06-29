@@ -1,0 +1,16 @@
+=== REQUEST ===
+DELETE https://jsonplaceholder.typicode.com/posts/1
+Headers:
+  Accept: application/json
+
+=== RESPONSE ===
+Status : 200
+Headers: {CF-RAY=a1369dca0fb60e76-DFW, Server=cloudflare, X-Ratelimit-Remaining=998, X-Content-Type-Options=nosniff, Connection=keep-alive, Cf-Cache-Status=DYNAMIC, Reporting-Endpoints=heroku-nel="https://nel.heroku.com/reports?s=CoBl69pqdFHUvxL%2BodjP4mbOJA7hfja6AUKfwWJPOhk%3D&sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d&ts=1782753778", Pragma=no-cache, Date=Mon, 29 Jun 2026 17:22:58 GMT, Via=2.0 heroku-router, X-Ratelimit-Reset=1782753800, X-Ratelimit-Limit=1000, Nel={"report_to":"heroku-nel","response_headers":["Via"],"max_age":3600,"success_fraction":0.01,"failure_fraction":0.1}, Etag=W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8", Cache-Control=no-cache, Report-To={"group":"heroku-nel","endpoints":[{"url":"https://nel.heroku.com/reports?s=CoBl69pqdFHUvxL%2BodjP4mbOJA7hfja6AUKfwWJPOhk%3D\u0026sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d\u0026ts=1782753778"}],"max_age":3600}, Access-Control-Allow-Credentials=true, Vary=Origin, Accept-Encoding, Expires=-1, alt-svc=h3=":443"; ma=86400, Content-Length=2, X-Powered-By=Express, Content-Type=application/json; charset=utf-8}
+Body:
+{
+    
+}
+
+=== cURL REPRODUCTION ===
+curl -X DELETE "https://jsonplaceholder.typicode.com/posts/1" \
+  -H "Accept: application/json"

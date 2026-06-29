@@ -1,0 +1,36 @@
+{
+  "id" : "TC002",
+  "title" : "Get single comment ID=1 returns comment with valid email",
+  "type" : "api",
+  "tags" : [ "smoke", "comments", "get" ],
+  "expected" : "GET /comments/1 returns HTTP 200 with id=1 and a non-empty email",
+  "steps" : null,
+  "request" : {
+    "method" : "GET",
+    "url" : "https://jsonplaceholder.typicode.com/comments/1",
+    "params" : { },
+    "headers" : {
+      "Accept" : "application/json"
+    },
+    "body" : ""
+  },
+  "assertions" : [ {
+    "type" : "status_code",
+    "path" : "",
+    "expected" : "200"
+  }, {
+    "type" : "json_path",
+    "path" : "id",
+    "expected" : "1"
+  }, {
+    "type" : "not_empty",
+    "path" : "email",
+    "expected" : "true"
+  }, {
+    "type" : "body_contains",
+    "path" : "",
+    "expected" : "postId"
+  } ],
+  "uiTest" : false,
+  "apiTest" : true
+}

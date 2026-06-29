@@ -1,0 +1,57 @@
+{
+  "id" : "TC006",
+  "title" : "Cart badge persists after navigating to cart page",
+  "type" : "ui",
+  "tags" : [ "regression", "cart", "navigation" ],
+  "expected" : "The cart badge count remains visible with count 1 after navigating from inventory to the cart page",
+  "steps" : [ {
+    "action" : "navigate",
+    "target" : "${BASE_URL}",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "fill",
+    "target" : "username_input",
+    "value" : "${LOGIN_USER}",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "fill",
+    "target" : "password_input",
+    "value" : "${LOGIN_PASS}",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : "login_button",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "wait_for",
+    "target" : "inventory_list",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : "add_to_cart",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : "cart_link",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "assert_url_contains",
+    "target" : "cart.html",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "assert_text",
+    "target" : "cart_badge",
+    "value" : "1",
+    "fallbackTargets" : [ ]
+  } ],
+  "request" : null,
+  "assertions" : null,
+  "uiTest" : true,
+  "apiTest" : false
+}

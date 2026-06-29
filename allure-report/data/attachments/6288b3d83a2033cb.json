@@ -1,0 +1,24 @@
+{
+  "id" : "TC006",
+  "title" : "Delete post ID=1 returns 200",
+  "type" : "api",
+  "tags" : [ "regression", "posts", "delete" ],
+  "expected" : "DELETE /posts/1 returns HTTP 200 indicating successful deletion",
+  "steps" : null,
+  "request" : {
+    "method" : "DELETE",
+    "url" : "https://jsonplaceholder.typicode.com/posts/1",
+    "params" : { },
+    "headers" : {
+      "Accept" : "application/json"
+    },
+    "body" : ""
+  },
+  "assertions" : [ {
+    "type" : "status_code",
+    "path" : "",
+    "expected" : "200"
+  } ],
+  "uiTest" : false,
+  "apiTest" : true
+}

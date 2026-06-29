@@ -1,0 +1,54 @@
+╔══════════════════════════════════════════════════════╗
+║           AGENT ACTIVITY REPORT                      ║
+╚══════════════════════════════════════════════════════╝
+Run ID    : 6A69E041
+Timestamp : 2026-06-29T17:21:11.088483172Z
+Suite     : Add to Cart
+
+── LOCATOR RESOLUTIONS (Page Object logical names used) ──
+  add_to_cart                    → .btn_primary
+  cart_badge                     → .shopping_cart_badge
+  cart_link                      → .shopping_cart_link
+  inventory_list                 → .inventory_list
+  item_name                      → .inventory_item_name1
+  login_button                   → #login-button
+  password_input                 → #password
+  username_input                 → #user-name
+
+── UNKNOWN TARGETS (not in PageRegistry — add to Page Object) ──
+  (none — all logical names resolved)
+
+── SELF-HEAL EVENTS (locator drift detected and recovered) ──
+  [TC004] click: .inventory_item_name1
+    → healed with: .inventory_item_name
+  [TC003] click: .inventory_item_name1
+    → healed with: .inventory_item_name
+
+── TEST DATA VARIABLES RESOLVED ──
+  ${BASE_URL            } → https://www.saucedemo.com
+  ${LOGIN_PASS          } → ***
+  ${LOGIN_USER          } → standard_user
+
+── PAGE REGISTRY COVERAGE ──
+  Used   : 8/22 selectors (36%)
+  Unused : about, all_items, back_button, close_button, error_message, item_price, logout, open_button, page_title, product_description, product_name, product_price, reset, sort_dropdown
+
+── AI TEST QUALITY SCORE ──
+╔══════════════════════════════════════╗
+║   AI TEST QUALITY SCORE:  34/100     ║
+╠══════════════════════════════════════╣
+║  Assertion Depth    :   9/25         ║
+║  Negative Coverage  :   0/25         ║
+║  Edge Case Coverage :   0/25         ║
+║  Step Realism       :  25/25         ║
+║  Tier               : POOR          ║
+╠══════════════════════════════════════╣
+║  Tests: 6 (6 UI / 0 API) | Avg UI st...║
+╚══════════════════════════════════════╝
+
+── SUMMARY ──
+  Logical names resolved : 8
+  Unknown targets        : 0
+  Self-heal events       : 2
+  Variables resolved     : 3
+  AI quality score       : 34/100 (POOR)

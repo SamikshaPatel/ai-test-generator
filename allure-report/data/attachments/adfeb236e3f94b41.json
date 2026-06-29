@@ -1,0 +1,36 @@
+{
+  "id" : "TC002",
+  "title" : "Get single post ID=5 returns correct post",
+  "type" : "api",
+  "tags" : [ "smoke", "posts", "get" ],
+  "expected" : "GET /posts/5 returns HTTP 200 with id=5 and non-empty title",
+  "steps" : null,
+  "request" : {
+    "method" : "GET",
+    "url" : "https://jsonplaceholder.typicode.com/posts/5",
+    "params" : { },
+    "headers" : {
+      "Accept" : "application/json"
+    },
+    "body" : ""
+  },
+  "assertions" : [ {
+    "type" : "status_code",
+    "path" : "",
+    "expected" : "200"
+  }, {
+    "type" : "json_path",
+    "path" : "id",
+    "expected" : "5"
+  }, {
+    "type" : "not_empty",
+    "path" : "title",
+    "expected" : "true"
+  }, {
+    "type" : "schema_file",
+    "path" : "",
+    "expected" : "post.schema.json"
+  } ],
+  "uiTest" : false,
+  "apiTest" : true
+}

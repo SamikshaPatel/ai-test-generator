@@ -1,0 +1,33 @@
+{
+  "id" : "TC005",
+  "title" : "Create new todo returns 201 with server-assigned ID",
+  "type" : "api",
+  "tags" : [ "smoke", "todos", "post" ],
+  "expected" : "POST /todos returns HTTP 201 with a generated id and the submitted title",
+  "steps" : null,
+  "request" : {
+    "method" : "POST",
+    "url" : "https://jsonplaceholder.typicode.com/todos",
+    "params" : { },
+    "headers" : {
+      "Accept" : "application/json",
+      "Content-Type" : "application/json"
+    },
+    "body" : "{\"title\": \"Write more tests\", \"completed\": false, \"userId\": 1}"
+  },
+  "assertions" : [ {
+    "type" : "status_code",
+    "path" : "",
+    "expected" : "201"
+  }, {
+    "type" : "not_empty",
+    "path" : "id",
+    "expected" : "true"
+  }, {
+    "type" : "json_path",
+    "path" : "title",
+    "expected" : "Write more tests"
+  } ],
+  "uiTest" : false,
+  "apiTest" : true
+}

@@ -1,0 +1,82 @@
+{
+  "id" : "TC005",
+  "title" : "Checkout complete header text confirms order success",
+  "type" : "ui",
+  "tags" : [ "smoke", "e2e", "checkout" ],
+  "expected" : "The checkout complete page header contains 'Thank you' confirming the order",
+  "steps" : [ {
+    "action" : "navigate",
+    "target" : "${BASE_URL}",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "fill",
+    "target" : "username_input",
+    "value" : "${LOGIN_USER}",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "fill",
+    "target" : "password_input",
+    "value" : "${LOGIN_PASS}",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : "login_button",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "wait_for",
+    "target" : "inventory_list",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : "add_to_cart",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : "cart_link",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : ".checkout_button",
+    "value" : "",
+    "fallbackTargets" : [ "[data-test='checkout']" ]
+  }, {
+    "action" : "fill",
+    "target" : "[data-test='firstName']",
+    "value" : "QA",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "fill",
+    "target" : "[data-test='lastName']",
+    "value" : "Tester",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "fill",
+    "target" : "[data-test='postalCode']",
+    "value" : "12345",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : "[data-test='continue']",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : "[data-test='finish']",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "assert_text",
+    "target" : ".complete-header",
+    "value" : "Thank you",
+    "fallbackTargets" : [ ]
+  } ],
+  "request" : null,
+  "assertions" : null,
+  "uiTest" : true,
+  "apiTest" : false
+}

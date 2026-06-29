@@ -1,0 +1,57 @@
+╔══════════════════════════════════════════════════════╗
+║           AGENT ACTIVITY REPORT                      ║
+╚══════════════════════════════════════════════════════╝
+Run ID    : 6A69E041
+Timestamp : 2026-06-29T17:21:11.088483172Z
+Suite     : Products Page
+
+── LOCATOR RESOLUTIONS (Page Object logical names used) ──
+  add_to_cart                    → .btn_primary
+  all_items                      → #inventory_sidebar_link
+  cart_badge                     → .shopping_cart_badge
+  inventory_list                 → .inventory_list
+  item_name                      → .inventory_item_name1
+  login_button                   → #login-button
+  logout                         → #logout_sidebar_link
+  open_button                    → #react-burger-menu-btn
+  page_title                     → .title
+  password_input                 → #password
+  product_name                   → .inventory_details_name
+  sort_dropdown                  → .product_sort_container
+  username_input                 → #user-name
+
+── UNKNOWN TARGETS (not in PageRegistry — add to Page Object) ──
+  (none — all logical names resolved)
+
+── SELF-HEAL EVENTS (locator drift detected and recovered) ──
+  [TC006] click: .inventory_item_name1
+    → healed with: .inventory_item_name
+
+── TEST DATA VARIABLES RESOLVED ──
+  ${BASE_URL            } → https://www.saucedemo.com
+  ${LOGIN_PASS          } → ***
+  ${LOGIN_USER          } → standard_user
+
+── PAGE REGISTRY COVERAGE ──
+  Used   : 13/22 selectors (59%)
+  Unused : about, back_button, cart_link, close_button, error_message, item_price, product_description, product_price, reset
+
+── AI TEST QUALITY SCORE ──
+╔══════════════════════════════════════╗
+║   AI TEST QUALITY SCORE:  40/100     ║
+╠══════════════════════════════════════╣
+║  Assertion Depth    :  15/25         ║
+║  Negative Coverage  :   0/25         ║
+║  Edge Case Coverage :   0/25         ║
+║  Step Realism       :  25/25         ║
+║  Tier               : POOR          ║
+╠══════════════════════════════════════╣
+║  Tests: 7 (7 UI / 0 API) | Avg UI st...║
+╚══════════════════════════════════════╝
+
+── SUMMARY ──
+  Logical names resolved : 13
+  Unknown targets        : 0
+  Self-heal events       : 1
+  Variables resolved     : 3
+  AI quality score       : 40/100 (POOR)

@@ -1,0 +1,32 @@
+{
+  "id" : "TC001",
+  "title" : "List all todos returns 200 with completed field present",
+  "type" : "api",
+  "tags" : [ "smoke", "todos", "get" ],
+  "expected" : "GET /todos returns HTTP 200 with a non-empty array of todo objects each having a completed field",
+  "steps" : null,
+  "request" : {
+    "method" : "GET",
+    "url" : "https://jsonplaceholder.typicode.com/todos",
+    "params" : { },
+    "headers" : {
+      "Accept" : "application/json"
+    },
+    "body" : ""
+  },
+  "assertions" : [ {
+    "type" : "status_code",
+    "path" : "",
+    "expected" : "200"
+  }, {
+    "type" : "not_empty",
+    "path" : "[0].title",
+    "expected" : "true"
+  }, {
+    "type" : "body_contains",
+    "path" : "",
+    "expected" : "completed"
+  } ],
+  "uiTest" : false,
+  "apiTest" : true
+}

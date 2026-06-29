@@ -1,0 +1,37 @@
+{
+  "id" : "TC002",
+  "title" : "Inventory page title shows Products after login",
+  "type" : "ui",
+  "tags" : [ "smoke", "inventory" ],
+  "expected" : "After login the page heading reads 'Products'",
+  "steps" : [ {
+    "action" : "navigate",
+    "target" : "${BASE_URL}",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "fill",
+    "target" : "username_input",
+    "value" : "${LOGIN_USER}",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "fill",
+    "target" : "password_input",
+    "value" : "${LOGIN_PASS}",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : "login_button",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "assert_text",
+    "target" : "page_title",
+    "value" : "Products",
+    "fallbackTargets" : [ ]
+  } ],
+  "request" : null,
+  "assertions" : null,
+  "uiTest" : true,
+  "apiTest" : false
+}

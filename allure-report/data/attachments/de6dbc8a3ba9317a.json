@@ -1,0 +1,52 @@
+{
+  "id" : "TC006",
+  "title" : "Clicking product name navigates to product detail page",
+  "type" : "ui",
+  "tags" : [ "navigation", "products" ],
+  "expected" : "Clicking the first product name link opens the product detail page at /inventory-item.html",
+  "steps" : [ {
+    "action" : "navigate",
+    "target" : "${BASE_URL}",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "fill",
+    "target" : "username_input",
+    "value" : "${LOGIN_USER}",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "fill",
+    "target" : "password_input",
+    "value" : "${LOGIN_PASS}",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : "login_button",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "wait_for",
+    "target" : "inventory_list",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : "item_name",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "assert_url_contains",
+    "target" : "/inventory-item.html",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "assert_visible",
+    "target" : "product_name",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  } ],
+  "request" : null,
+  "assertions" : null,
+  "uiTest" : true,
+  "apiTest" : false
+}

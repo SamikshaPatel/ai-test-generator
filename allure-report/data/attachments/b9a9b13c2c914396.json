@@ -1,0 +1,24 @@
+{
+  "id" : "TC006",
+  "title" : "Get non-existent comment ID=9999 returns 404",
+  "type" : "api",
+  "tags" : [ "negative", "comments", "get" ],
+  "expected" : "GET /comments/9999 returns HTTP 404 when the comment does not exist",
+  "steps" : null,
+  "request" : {
+    "method" : "GET",
+    "url" : "https://jsonplaceholder.typicode.com/comments/9999",
+    "params" : { },
+    "headers" : {
+      "Accept" : "application/json"
+    },
+    "body" : ""
+  },
+  "assertions" : [ {
+    "type" : "status_code",
+    "path" : "",
+    "expected" : "404"
+  } ],
+  "uiTest" : false,
+  "apiTest" : true
+}

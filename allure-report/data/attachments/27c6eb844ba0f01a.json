@@ -1,0 +1,52 @@
+{
+  "id" : "TC005",
+  "title" : "Burger menu opens and shows All Items and Logout links",
+  "type" : "ui",
+  "tags" : [ "navigation", "products" ],
+  "expected" : "Clicking the burger menu reveals All Items and Logout navigation options",
+  "steps" : [ {
+    "action" : "navigate",
+    "target" : "${BASE_URL}",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "fill",
+    "target" : "username_input",
+    "value" : "${LOGIN_USER}",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "fill",
+    "target" : "password_input",
+    "value" : "${LOGIN_PASS}",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : "login_button",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "wait_for",
+    "target" : "inventory_list",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : "open_button",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "assert_visible",
+    "target" : "all_items",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "assert_visible",
+    "target" : "logout",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  } ],
+  "request" : null,
+  "assertions" : null,
+  "uiTest" : true,
+  "apiTest" : false
+}

@@ -1,0 +1,16 @@
+=== REQUEST ===
+GET https://jsonplaceholder.typicode.com/todos/9999
+Headers:
+  Accept: application/json
+
+=== RESPONSE ===
+Status : 404
+Headers: {CF-RAY=a1369da72a8710bc-ORD, Server=cloudflare, X-Ratelimit-Remaining=992, X-Content-Type-Options=nosniff, Connection=keep-alive, Cf-Cache-Status=HIT, Reporting-Endpoints=heroku-nel="https://nel.heroku.com/reports?s=fcY58x8g2sdj4H6sVE2hYXQaZjY0YZP3juRvNBcti78%3D&sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d&ts=1782730298", Pragma=no-cache, Date=Mon, 29 Jun 2026 17:22:52 GMT, Via=2.0 heroku-router, X-Ratelimit-Reset=1782730350, X-Ratelimit-Limit=1000, Nel={"report_to":"heroku-nel","response_headers":["Via"],"max_age":3600,"success_fraction":0.01,"failure_fraction":0.1}, Etag=W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8", Cache-Control=max-age=43200, Report-To={"group":"heroku-nel","endpoints":[{"url":"https://nel.heroku.com/reports?s=fcY58x8g2sdj4H6sVE2hYXQaZjY0YZP3juRvNBcti78%3D\u0026sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d\u0026ts=1782730298"}],"max_age":3600}, Access-Control-Allow-Credentials=true, Vary=Origin, Accept-Encoding, Expires=-1, alt-svc=h3=":443"; ma=86400, Content-Length=2, Age=23474, X-Powered-By=Express, Content-Type=application/json; charset=utf-8}
+Body:
+{
+    
+}
+
+=== cURL REPRODUCTION ===
+curl -X GET "https://jsonplaceholder.typicode.com/todos/9999" \
+  -H "Accept: application/json"

@@ -1,0 +1,47 @@
+{
+  "id" : "TC001",
+  "title" : "Products page displays title and inventory list after login",
+  "type" : "ui",
+  "tags" : [ "smoke", "products" ],
+  "expected" : "After login the products page shows title 'Products' and the full inventory list",
+  "steps" : [ {
+    "action" : "navigate",
+    "target" : "${BASE_URL}",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "fill",
+    "target" : "username_input",
+    "value" : "${LOGIN_USER}",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "fill",
+    "target" : "password_input",
+    "value" : "${LOGIN_PASS}",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : "login_button",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "assert_url_contains",
+    "target" : "/inventory.html",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "assert_text",
+    "target" : "page_title",
+    "value" : "Products",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "assert_visible",
+    "target" : "inventory_list",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  } ],
+  "request" : null,
+  "assertions" : null,
+  "uiTest" : true,
+  "apiTest" : false
+}

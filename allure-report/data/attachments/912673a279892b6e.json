@@ -1,0 +1,34 @@
+{
+  "id" : "TC004",
+  "title" : "Filter todos by completed=false returns only incomplete todos",
+  "type" : "api",
+  "tags" : [ "regression", "todos", "filter" ],
+  "expected" : "GET /todos?completed=false returns HTTP 200 with todos all having completed=false",
+  "steps" : null,
+  "request" : {
+    "method" : "GET",
+    "url" : "https://jsonplaceholder.typicode.com/todos",
+    "params" : {
+      "completed" : "false"
+    },
+    "headers" : {
+      "Accept" : "application/json"
+    },
+    "body" : ""
+  },
+  "assertions" : [ {
+    "type" : "status_code",
+    "path" : "",
+    "expected" : "200"
+  }, {
+    "type" : "json_path",
+    "path" : "[0].completed",
+    "expected" : "false"
+  }, {
+    "type" : "not_empty",
+    "path" : "[0].title",
+    "expected" : "true"
+  } ],
+  "uiTest" : false,
+  "apiTest" : true
+}

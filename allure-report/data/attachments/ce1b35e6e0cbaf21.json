@@ -1,0 +1,32 @@
+{
+  "id" : "TC004",
+  "title" : "Get comments via nested post resource returns same result as query param",
+  "type" : "api",
+  "tags" : [ "regression", "comments", "nested" ],
+  "expected" : "GET /posts/1/comments returns HTTP 200 with comments belonging to post 1",
+  "steps" : null,
+  "request" : {
+    "method" : "GET",
+    "url" : "https://jsonplaceholder.typicode.com/posts/1/comments",
+    "params" : { },
+    "headers" : {
+      "Accept" : "application/json"
+    },
+    "body" : ""
+  },
+  "assertions" : [ {
+    "type" : "status_code",
+    "path" : "",
+    "expected" : "200"
+  }, {
+    "type" : "json_path",
+    "path" : "[0].postId",
+    "expected" : "1"
+  }, {
+    "type" : "not_empty",
+    "path" : "[0].name",
+    "expected" : "true"
+  } ],
+  "uiTest" : false,
+  "apiTest" : true
+}

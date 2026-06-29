@@ -1,0 +1,2 @@
+Primary: .inventory_item_name1
+Healed with: .inventory_item_name

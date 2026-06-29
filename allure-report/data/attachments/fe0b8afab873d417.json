@@ -1,0 +1,47 @@
+{
+  "id" : "TC003",
+  "title" : "Sort by Price low to high reorders the product list",
+  "type" : "ui",
+  "tags" : [ "sort", "products" ],
+  "expected" : "Selecting Price (low to high) from the sort dropdown reorders products and prices remain visible",
+  "steps" : [ {
+    "action" : "navigate",
+    "target" : "${BASE_URL}",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "fill",
+    "target" : "username_input",
+    "value" : "${LOGIN_USER}",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "fill",
+    "target" : "password_input",
+    "value" : "${LOGIN_PASS}",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : "login_button",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "wait_for",
+    "target" : "inventory_list",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "select",
+    "target" : "sort_dropdown",
+    "value" : "Price (low to high)",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "assert_visible",
+    "target" : "inventory_list",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  } ],
+  "request" : null,
+  "assertions" : null,
+  "uiTest" : true,
+  "apiTest" : false
+}

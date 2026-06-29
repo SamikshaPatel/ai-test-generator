@@ -1,0 +1,32 @@
+{
+  "id" : "TC002",
+  "title" : "Get single todo ID=1 returns incomplete todo",
+  "type" : "api",
+  "tags" : [ "smoke", "todos", "get" ],
+  "expected" : "GET /todos/1 returns HTTP 200 with id=1 and completed=false",
+  "steps" : null,
+  "request" : {
+    "method" : "GET",
+    "url" : "https://jsonplaceholder.typicode.com/todos/1",
+    "params" : { },
+    "headers" : {
+      "Accept" : "application/json"
+    },
+    "body" : ""
+  },
+  "assertions" : [ {
+    "type" : "status_code",
+    "path" : "",
+    "expected" : "200"
+  }, {
+    "type" : "json_path",
+    "path" : "id",
+    "expected" : "1"
+  }, {
+    "type" : "json_path",
+    "path" : "completed",
+    "expected" : "false"
+  } ],
+  "uiTest" : false,
+  "apiTest" : true
+}

@@ -1,0 +1,153 @@
+{
+  "tests": [
+    {
+      "id": "TC001",
+      "title": "List all posts returns 200 with non-empty array",
+      "type": "api",
+      "tags": ["smoke", "posts", "get"],
+      "expected": "GET /posts returns HTTP 200 with a non-empty array of post objects each having title and userId",
+      "request": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/posts",
+        "params": {},
+        "headers": { "Accept": "application/json" },
+        "body": ""
+      },
+      "assertions": [
+        { "type": "status_code",     "path": "",           "expected": "200" },
+        { "type": "not_empty",       "path": "[0].title",  "expected": "true" },
+        { "type": "not_empty",       "path": "[0].userId", "expected": "true" },
+        { "type": "response_time_ms","path": "",           "expected": "3000" }
+      ]
+    },
+    {
+      "id": "TC002",
+      "title": "Get single post ID=5 returns correct post",
+      "type": "api",
+      "tags": ["smoke", "posts", "get"],
+      "expected": "GET /posts/5 returns HTTP 200 with id=5 and non-empty title",
+      "request": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/posts/5",
+        "params": {},
+        "headers": { "Accept": "application/json" },
+        "body": ""
+      },
+      "assertions": [
+        { "type": "status_code", "path": "",              "expected": "200" },
+        { "type": "json_path",   "path": "id",            "expected": "5" },
+        { "type": "not_empty",   "path": "title",         "expected": "true" },
+        { "type": "schema_file", "path": "",              "expected": "post.schema.json" }
+      ]
+    },
+    {
+      "id": "TC003",
+      "title": "Filter posts by userId=2 returns only that user's posts",
+      "type": "api",
+      "tags": ["regression", "posts", "filter"],
+      "expected": "GET /posts?userId=2 returns HTTP 200 with posts all belonging to userId 2",
+      "request": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/posts",
+        "params": { "userId": "2" },
+        "headers": { "Accept": "application/json" },
+        "body": ""
+      },
+      "assertions": [
+        { "type": "status_code", "path": "",            "expected": "200" },
+        { "type": "json_path",   "path": "[0].userId",  "expected": "2" },
+        { "type": "not_empty",   "path": "[0].title",   "expected": "true" }
+      ]
+    },
+    {
+      "id": "TC004",
+      "title": "Create new post returns 201 with server-assigned ID",
+      "type": "api",
+      "tags": ["smoke", "posts", "post"],
+      "expected": "POST /posts returns HTTP 201 with a server-generated id and the submitted title",
+      "request": {
+        "method": "POST",
+        "url": "https://jsonplaceholder.typicode.com/posts",
+        "params": {},
+        "headers": { "Accept": "application/json", "Content-Type": "application/json" },
+        "body": "{\"title\": \"AI Test Post\", \"body\": \"Created by automated test suite\", \"userId\": 1}"
+      },
+      "assertions": [
+        { "type": "status_code", "path": "",      "expected": "201" },
+        { "type": "not_empty",   "path": "id",    "expected": "true" },
+        { "type": "json_path",   "path": "title", "expected": "AI Test Post" }
+      ]
+    },
+    {
+      "id": "TC005",
+      "title": "Partial update post ID=1 via PATCH returns updated title",
+      "type": "api",
+      "tags": ["regression", "posts", "patch"],
+      "expected": "PATCH /posts/1 with only title returns HTTP 200 with the patched title",
+      "request": {
+        "method": "PATCH",
+        "url": "https://jsonplaceholder.typicode.com/posts/1",
+        "params": {},
+        "headers": { "Accept": "application/json", "Content-Type": "application/json" },
+        "body": "{\"title\": \"Patched Title\"}"
+      },
+      "assertions": [
+        { "type": "status_code", "path": "",      "expected": "200" },
+        { "type": "json_path",   "path": "title", "expected": "Patched Title" }
+      ]
+    },
+    {
+      "id": "TC006",
+      "title": "Full replace post ID=3 via PUT returns replaced resource",
+      "type": "api",
+      "tags": ["regression", "posts", "put"],
+      "expected": "PUT /posts/3 returns HTTP 200 with the replaced fields",
+      "request": {
+        "method": "PUT",
+        "url": "https://jsonplaceholder.typicode.com/posts/3",
+        "params": {},
+        "headers": { "Accept": "application/json", "Content-Type": "application/json" },
+        "body": "{\"id\": 3, \"title\": \"Replaced Post\", \"body\": \"Full replacement body\", \"userId\": 1}"
+      },
+      "assertions": [
+        { "type": "status_code", "path": "",      "expected": "200" },
+        { "type": "json_path",   "path": "title", "expected": "Replaced Post" },
+        { "type": "json_path",   "path": "id",    "expected": "3" }
+      ]
+    },
+    {
+      "id": "TC007",
+      "title": "Delete post ID=2 returns 200",
+      "type": "api",
+      "tags": ["regression", "posts", "delete"],
+      "expected": "DELETE /posts/2 returns HTTP 200 indicating the resource was deleted",
+      "request": {
+        "method": "DELETE",
+        "url": "https://jsonplaceholder.typicode.com/posts/2",
+        "params": {},
+        "headers": { "Accept": "application/json" },
+        "body": ""
+      },
+      "assertions": [
+        { "type": "status_code", "path": "", "expected": "200" }
+      ]
+    },
+    {
+      "id": "TC008",
+      "title": "Get non-existent post ID=9999 returns 404",
+      "type": "api",
+      "tags": ["negative", "posts", "get"],
+      "expected": "GET /posts/9999 returns HTTP 404 when the post does not exist",
+      "request": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/posts/9999",
+        "params": {},
+        "headers": { "Accept": "application/json" },
+        "body": ""
+      },
+      "assertions": [
+        { "type": "status_code", "path": "", "expected": "404" }
+      ]
+    }
+  ]
+}

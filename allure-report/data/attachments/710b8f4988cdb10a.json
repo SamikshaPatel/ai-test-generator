@@ -1,0 +1,121 @@
+{
+  "tests": [
+    {
+      "id": "TC001",
+      "title": "Products page displays title and inventory list after login",
+      "type": "ui",
+      "tags": ["smoke", "products"],
+      "expected": "After login the products page shows title 'Products' and the full inventory list",
+      "steps": [
+        { "action": "navigate",            "target": "${BASE_URL}",      "value": "" },
+        { "action": "fill",                "target": "username_input",   "value": "${LOGIN_USER}" },
+        { "action": "fill",                "target": "password_input",   "value": "${LOGIN_PASS}" },
+        { "action": "click",               "target": "login_button",     "value": "" },
+        { "action": "assert_url_contains", "target": "/inventory.html",  "value": "" },
+        { "action": "assert_text",         "target": "page_title",       "value": "Products" },
+        { "action": "assert_visible",      "target": "inventory_list",   "value": "" }
+      ]
+    },
+    {
+      "id": "TC002",
+      "title": "Sort dropdown is visible on products page",
+      "type": "ui",
+      "tags": ["smoke", "sort", "products"],
+      "expected": "The sort dropdown control is visible after login on the inventory page",
+      "steps": [
+        { "action": "navigate",       "target": "${BASE_URL}",     "value": "" },
+        { "action": "fill",           "target": "username_input",  "value": "${LOGIN_USER}" },
+        { "action": "fill",           "target": "password_input",  "value": "${LOGIN_PASS}" },
+        { "action": "click",          "target": "login_button",    "value": "" },
+        { "action": "wait_for",       "target": "inventory_list",  "value": "" },
+        { "action": "assert_visible", "target": "sort_dropdown",   "value": "" }
+      ]
+    },
+    {
+      "id": "TC003",
+      "title": "Sort by Price low to high reorders the product list",
+      "type": "ui",
+      "tags": ["sort", "products"],
+      "expected": "Selecting Price (low to high) from the sort dropdown reorders products and prices remain visible",
+      "steps": [
+        { "action": "navigate",       "target": "${BASE_URL}",     "value": "" },
+        { "action": "fill",           "target": "username_input",  "value": "${LOGIN_USER}" },
+        { "action": "fill",           "target": "password_input",  "value": "${LOGIN_PASS}" },
+        { "action": "click",          "target": "login_button",    "value": "" },
+        { "action": "wait_for",       "target": "inventory_list",  "value": "" },
+        { "action": "select",         "target": "sort_dropdown",   "value": "Price (low to high)" },
+        { "action": "assert_visible", "target": "inventory_list",  "value": "" }
+      ]
+    },
+    {
+      "id": "TC004",
+      "title": "Add to cart increments cart badge to 1",
+      "type": "ui",
+      "tags": ["smoke", "cart", "products"],
+      "expected": "Clicking Add to cart on the first product shows the cart badge with count 1",
+      "steps": [
+        { "action": "navigate",       "target": "${BASE_URL}",     "value": "" },
+        { "action": "fill",           "target": "username_input",  "value": "${LOGIN_USER}" },
+        { "action": "fill",           "target": "password_input",  "value": "${LOGIN_PASS}" },
+        { "action": "click",          "target": "login_button",    "value": "" },
+        { "action": "wait_for",       "target": "inventory_list",  "value": "" },
+        { "action": "click",          "target": "add_to_cart",     "value": "" },
+        { "action": "assert_visible", "target": "cart_badge",      "value": "" },
+        { "action": "assert_text",    "target": "cart_badge",      "value": "1" }
+      ]
+    },
+    {
+      "id": "TC005",
+      "title": "Burger menu opens and shows All Items and Logout links",
+      "type": "ui",
+      "tags": ["navigation", "products"],
+      "expected": "Clicking the burger menu reveals All Items and Logout navigation options",
+      "steps": [
+        { "action": "navigate",       "target": "${BASE_URL}",     "value": "" },
+        { "action": "fill",           "target": "username_input",  "value": "${LOGIN_USER}" },
+        { "action": "fill",           "target": "password_input",  "value": "${LOGIN_PASS}" },
+        { "action": "click",          "target": "login_button",    "value": "" },
+        { "action": "wait_for",       "target": "inventory_list",  "value": "" },
+        { "action": "click",          "target": "open_button",     "value": "" },
+        { "action": "assert_visible", "target": "all_items",       "value": "" },
+        { "action": "assert_visible", "target": "logout",          "value": "" }
+      ]
+    },
+    {
+      "id": "TC006",
+      "title": "Clicking product name navigates to product detail page",
+      "type": "ui",
+      "tags": ["navigation", "products"],
+      "expected": "Clicking the first product name link opens the product detail page at /inventory-item.html",
+      "steps": [
+        { "action": "navigate",            "target": "${BASE_URL}",          "value": "" },
+        { "action": "fill",                "target": "username_input",        "value": "${LOGIN_USER}" },
+        { "action": "fill",                "target": "password_input",        "value": "${LOGIN_PASS}" },
+        { "action": "click",               "target": "login_button",          "value": "" },
+        { "action": "wait_for",            "target": "inventory_list",        "value": "" },
+        { "action": "click",               "target": "item_name",             "value": "" },
+        { "action": "assert_url_contains", "target": "/inventory-item.html",  "value": "" },
+        { "action": "assert_visible",      "target": "product_name",          "value": "" }
+      ]
+    },
+    {
+      "id": "TC007",
+      "title": "Logout via burger menu redirects to login page",
+      "type": "ui",
+      "tags": ["regression", "navigation", "products"],
+      "expected": "Clicking Logout in the burger menu redirects the user back to the login page",
+      "steps": [
+        { "action": "navigate",            "target": "${BASE_URL}",      "value": "" },
+        { "action": "fill",                "target": "username_input",   "value": "${LOGIN_USER}" },
+        { "action": "fill",                "target": "password_input",   "value": "${LOGIN_PASS}" },
+        { "action": "click",               "target": "login_button",     "value": "" },
+        { "action": "wait_for",            "target": "inventory_list",   "value": "" },
+        { "action": "click",               "target": "open_button",      "value": "" },
+        { "action": "wait_for",            "target": "logout",           "value": "" },
+        { "action": "click",               "target": "logout",           "value": "" },
+        { "action": "assert_url_contains", "target": "/",                "value": "" },
+        { "action": "assert_visible",      "target": "login_button",     "value": "" }
+      ]
+    }
+  ]
+}

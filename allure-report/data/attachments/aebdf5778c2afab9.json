@@ -1,0 +1,34 @@
+{
+  "id" : "TC003",
+  "title" : "Filter comments by postId=1 returns only that post's comments",
+  "type" : "api",
+  "tags" : [ "regression", "comments", "filter" ],
+  "expected" : "GET /comments?postId=1 returns HTTP 200 with comments all having postId=1",
+  "steps" : null,
+  "request" : {
+    "method" : "GET",
+    "url" : "https://jsonplaceholder.typicode.com/comments",
+    "params" : {
+      "postId" : "1"
+    },
+    "headers" : {
+      "Accept" : "application/json"
+    },
+    "body" : ""
+  },
+  "assertions" : [ {
+    "type" : "status_code",
+    "path" : "",
+    "expected" : "200"
+  }, {
+    "type" : "json_path",
+    "path" : "[0].postId",
+    "expected" : "1"
+  }, {
+    "type" : "not_empty",
+    "path" : "[0].email",
+    "expected" : "true"
+  } ],
+  "uiTest" : false,
+  "apiTest" : true
+}

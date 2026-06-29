@@ -1,0 +1,136 @@
+=== REQUEST ===
+GET https://jsonplaceholder.typicode.com/todos
+Query Params: {userId=1}
+Headers:
+  Accept: application/json
+
+=== RESPONSE ===
+Status : 200
+Headers: {Transfer-Encoding=chunked, CF-RAY=a1369da71fd16689-ORD, Server=cloudflare, X-Ratelimit-Remaining=999, X-Content-Type-Options=nosniff, Connection=keep-alive, Cf-Cache-Status=HIT, Reporting-Endpoints=heroku-nel="https://nel.heroku.com/reports?s=q3QJlOv%2Fhk9S6rm46j9wmv78TKIGTZWkDDzxD7PTbgs%3D&sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d&ts=1781931681", Pragma=no-cache, Date=Mon, 29 Jun 2026 17:22:52 GMT, Via=2.0 heroku-router, X-Ratelimit-Reset=1781931733, X-Ratelimit-Limit=1000, Nel={"report_to":"heroku-nel","response_headers":["Via"],"max_age":3600,"success_fraction":0.01,"failure_fraction":0.1}, Etag=W/"8df-BI33H3JkF5x/twg0KTe/qy2U04I", Cache-Control=max-age=43200, Report-To={"group":"heroku-nel","endpoints":[{"url":"https://nel.heroku.com/reports?s=q3QJlOv%2Fhk9S6rm46j9wmv78TKIGTZWkDDzxD7PTbgs%3D\u0026sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d\u0026ts=1781931681"}],"max_age":3600}, Access-Control-Allow-Credentials=true, Content-Encoding=gzip, Vary=Origin, Accept-Encoding, Expires=-1, alt-svc=h3=":443"; ma=86400, Age=9208, X-Powered-By=Express, Content-Type=application/json; charset=utf-8}
+Body:
+[
+    {
+        "userId": 1,
+        "id": 1,
+        "title": "delectus aut autem",
+        "completed": false
+    },
+    {
+        "userId": 1,
+        "id": 2,
+        "title": "quis ut nam facilis et officia qui",
+        "completed": false
+    },
+    {
+        "userId": 1,
+        "id": 3,
+        "title": "fugiat veniam minus",
+        "completed": false
+    },
+    {
+        "userId": 1,
+        "id": 4,
+        "title": "et porro tempora",
+        "completed": true
+    },
+    {
+        "userId": 1,
+        "id": 5,
+        "title": "laboriosam mollitia et enim quasi adipisci quia provident illum",
+        "completed": false
+    },
+    {
+        "userId": 1,
+        "id": 6,
+        "title": "qui ullam ratione quibusdam voluptatem quia omnis",
+        "completed": false
+    },
+    {
+        "userId": 1,
+        "id": 7,
+        "title": "illo expedita consequatur quia in",
+        "completed": false
+    },
+    {
+        "userId": 1,
+        "id": 8,
+        "title": "quo adipisci enim quam ut ab",
+        "completed": true
+    },
+    {
+        "userId": 1,
+        "id": 9,
+        "title": "molestiae perspiciatis ipsa",
+        "completed": false
+    },
+    {
+        "userId": 1,
+        "id": 10,
+        "title": "illo est ratione doloremque quia maiores aut",
+        "completed": true
+    },
+    {
+        "userId": 1,
+        "id": 11,
+        "title": "vero rerum temporibus dolor",
+        "completed": true
+    },
+    {
+        "userId": 1,
+        "id": 12,
+        "title": "ipsa repellendus fugit nisi",
+        "completed": true
+    },
+    {
+        "userId": 1,
+        "id": 13,
+        "title": "et doloremque nulla",
+        "completed": false
+    },
+    {
+        "userId": 1,
+        "id": 14,
+        "title": "repellendus sunt dolores architecto voluptatum",
+        "completed": true
+    },
+    {
+        "userId": 1,
+        "id": 15,
+        "title": "ab voluptatum amet voluptas",
+        "completed": true
+    },
+    {
+        "userId": 1,
+        "id": 16,
+        "title": "accusamus eos facilis sint et aut voluptatem",
+        "completed": true
+    },
+    {
+        "userId": 1,
+        "id": 17,
+        "title": "quo laboriosam deleniti aut qui",
+        "completed": true
+    },
+    {
+        "userId": 1,
+        "id": 18,
+        "title": "dolorum est consequatur ea mollitia in culpa",
+        "completed": false
+    },
+    {
+        "userId": 1,
+        "id": 19,
+        "title": "molestiae ipsa aut voluptatibus pariatur dolor nihil",
+        "completed": true
+    },
+    {
+        "userId": 1,
+        "id": 20,
+        "title": "ullam nobis libero sapiente ad optio sint",
+        "completed": true
+    }
+]
+
+=== cURL REPRODUCTION ===
+curl -X GET "https://jsonplaceholder.typicode.com/todos?userId=1" \
+  -H "Accept: application/json"

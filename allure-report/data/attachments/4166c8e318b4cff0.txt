@@ -1,0 +1,20 @@
+=== REQUEST ===
+GET https://jsonplaceholder.typicode.com/comments/1
+Headers:
+  Accept: application/json
+
+=== RESPONSE ===
+Status : 200
+Headers: {Transfer-Encoding=chunked, CF-RAY=a1369c8c7de04cbb-LAX, Server=cloudflare, X-Ratelimit-Remaining=991, X-Content-Type-Options=nosniff, Connection=keep-alive, Cf-Cache-Status=HIT, Reporting-Endpoints=heroku-nel="https://nel.heroku.com/reports?s=Hv%2Frtx2hil4wyir8rf6auXUqibyLyG3NzD5%2FouFkftM%3D&sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d&ts=1782739746", Pragma=no-cache, Date=Mon, 29 Jun 2026 17:22:07 GMT, Via=2.0 heroku-router, X-Ratelimit-Reset=1782739770, X-Ratelimit-Limit=1000, Nel={"report_to":"heroku-nel","response_headers":["Via"],"max_age":3600,"success_fraction":0.01,"failure_fraction":0.1}, Etag=W/"10c-KJ4I9RM/+33TKdV8CFsIvqsDSP0", Cache-Control=max-age=43200, Report-To={"group":"heroku-nel","endpoints":[{"url":"https://nel.heroku.com/reports?s=Hv%2Frtx2hil4wyir8rf6auXUqibyLyG3NzD5%2FouFkftM%3D\u0026sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d\u0026ts=1782739746"}],"max_age":3600}, Access-Control-Allow-Credentials=true, Content-Encoding=gzip, Vary=Origin, Accept-Encoding, Expires=-1, alt-svc=h3=":443"; ma=86400, Age=13981, X-Powered-By=Express, Content-Type=application/json; charset=utf-8}
+Body:
+{
+    "postId": 1,
+    "id": 1,
+    "name": "id labore ex et quam laborum",
+    "email": "Eliseo@gardner.biz",
+    "body": "laudantium enim quasi est quidem magnam voluptate ipsam eos\ntempora quo necessitatibus\ndolor quam autem quasi\nreiciendis et nam sapiente accusantium"
+}
+
+=== cURL REPRODUCTION ===
+curl -X GET "https://jsonplaceholder.typicode.com/comments/1" \
+  -H "Accept: application/json"

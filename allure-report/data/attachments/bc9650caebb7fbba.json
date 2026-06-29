@@ -1,0 +1,87 @@
+{
+  "id" : "TC004",
+  "title" : "Order summary on step 2 shows item total and tax",
+  "type" : "ui",
+  "tags" : [ "smoke", "e2e", "checkout" ],
+  "expected" : "Checkout step 2 shows item subtotal and tax breakdown before finishing",
+  "steps" : [ {
+    "action" : "navigate",
+    "target" : "${BASE_URL}",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "fill",
+    "target" : "username_input",
+    "value" : "${LOGIN_USER}",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "fill",
+    "target" : "password_input",
+    "value" : "${LOGIN_PASS}",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : "login_button",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "wait_for",
+    "target" : "inventory_list",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : "add_to_cart",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : "cart_link",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : ".checkout_button",
+    "value" : "",
+    "fallbackTargets" : [ "[data-test='checkout']" ]
+  }, {
+    "action" : "fill",
+    "target" : "[data-test='firstName']",
+    "value" : "QA",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "fill",
+    "target" : "[data-test='lastName']",
+    "value" : "Tester",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "fill",
+    "target" : "[data-test='postalCode']",
+    "value" : "12345",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "click",
+    "target" : "[data-test='continue']",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "assert_url_contains",
+    "target" : "checkout-step-two.html",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "assert_visible",
+    "target" : ".summary_subtotal_label",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  }, {
+    "action" : "assert_visible",
+    "target" : ".summary_tax_label",
+    "value" : "",
+    "fallbackTargets" : [ ]
+  } ],
+  "request" : null,
+  "assertions" : null,
+  "uiTest" : true,
+  "apiTest" : false
+}

@@ -1,0 +1,116 @@
+{
+  "tests": [
+    {
+      "id": "TC001",
+      "title": "List all comments returns 200 with email field",
+      "type": "api",
+      "tags": ["smoke", "comments", "get"],
+      "expected": "GET /comments returns HTTP 200 with a non-empty array where first comment has an email field",
+      "request": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/comments",
+        "params": {},
+        "headers": { "Accept": "application/json" },
+        "body": ""
+      },
+      "assertions": [
+        { "type": "status_code", "path": "",           "expected": "200" },
+        { "type": "not_empty",   "path": "[0].email",  "expected": "true" },
+        { "type": "not_empty",   "path": "[0].body",   "expected": "true" }
+      ]
+    },
+    {
+      "id": "TC002",
+      "title": "Get single comment ID=1 returns comment with valid email",
+      "type": "api",
+      "tags": ["smoke", "comments", "get"],
+      "expected": "GET /comments/1 returns HTTP 200 with id=1 and a non-empty email",
+      "request": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/comments/1",
+        "params": {},
+        "headers": { "Accept": "application/json" },
+        "body": ""
+      },
+      "assertions": [
+        { "type": "status_code",  "path": "",      "expected": "200" },
+        { "type": "json_path",    "path": "id",    "expected": "1" },
+        { "type": "not_empty",    "path": "email", "expected": "true" },
+        { "type": "body_contains","path": "",      "expected": "postId" }
+      ]
+    },
+    {
+      "id": "TC003",
+      "title": "Filter comments by postId=1 returns only that post's comments",
+      "type": "api",
+      "tags": ["regression", "comments", "filter"],
+      "expected": "GET /comments?postId=1 returns HTTP 200 with comments all having postId=1",
+      "request": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/comments",
+        "params": { "postId": "1" },
+        "headers": { "Accept": "application/json" },
+        "body": ""
+      },
+      "assertions": [
+        { "type": "status_code", "path": "",             "expected": "200" },
+        { "type": "json_path",   "path": "[0].postId",   "expected": "1" },
+        { "type": "not_empty",   "path": "[0].email",    "expected": "true" }
+      ]
+    },
+    {
+      "id": "TC004",
+      "title": "Get comments via nested post resource returns same result as query param",
+      "type": "api",
+      "tags": ["regression", "comments", "nested"],
+      "expected": "GET /posts/1/comments returns HTTP 200 with comments belonging to post 1",
+      "request": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/posts/1/comments",
+        "params": {},
+        "headers": { "Accept": "application/json" },
+        "body": ""
+      },
+      "assertions": [
+        { "type": "status_code", "path": "",             "expected": "200" },
+        { "type": "json_path",   "path": "[0].postId",   "expected": "1" },
+        { "type": "not_empty",   "path": "[0].name",     "expected": "true" }
+      ]
+    },
+    {
+      "id": "TC005",
+      "title": "Comments response contains Content-Type application/json",
+      "type": "api",
+      "tags": ["smoke", "comments", "headers"],
+      "expected": "GET /comments/1 returns a Content-Type header containing application/json",
+      "request": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/comments/1",
+        "params": {},
+        "headers": { "Accept": "application/json" },
+        "body": ""
+      },
+      "assertions": [
+        { "type": "status_code", "path": "",               "expected": "200" },
+        { "type": "header",      "path": "Content-Type",   "expected": "application/json" }
+      ]
+    },
+    {
+      "id": "TC006",
+      "title": "Get non-existent comment ID=9999 returns 404",
+      "type": "api",
+      "tags": ["negative", "comments", "get"],
+      "expected": "GET /comments/9999 returns HTTP 404 when the comment does not exist",
+      "request": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/comments/9999",
+        "params": {},
+        "headers": { "Accept": "application/json" },
+        "body": ""
+      },
+      "assertions": [
+        { "type": "status_code", "path": "", "expected": "404" }
+      ]
+    }
+  ]
+}

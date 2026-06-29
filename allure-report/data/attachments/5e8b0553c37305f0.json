@@ -1,0 +1,33 @@
+{
+  "id" : "TC006",
+  "title" : "Full replace post ID=3 via PUT returns replaced resource",
+  "type" : "api",
+  "tags" : [ "regression", "posts", "put" ],
+  "expected" : "PUT /posts/3 returns HTTP 200 with the replaced fields",
+  "steps" : null,
+  "request" : {
+    "method" : "PUT",
+    "url" : "https://jsonplaceholder.typicode.com/posts/3",
+    "params" : { },
+    "headers" : {
+      "Accept" : "application/json",
+      "Content-Type" : "application/json"
+    },
+    "body" : "{\"id\": 3, \"title\": \"Replaced Post\", \"body\": \"Full replacement body\", \"userId\": 1}"
+  },
+  "assertions" : [ {
+    "type" : "status_code",
+    "path" : "",
+    "expected" : "200"
+  }, {
+    "type" : "json_path",
+    "path" : "title",
+    "expected" : "Replaced Post"
+  }, {
+    "type" : "json_path",
+    "path" : "id",
+    "expected" : "3"
+  } ],
+  "uiTest" : false,
+  "apiTest" : true
+}

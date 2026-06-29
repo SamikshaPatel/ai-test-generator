@@ -1,0 +1,105 @@
+{
+  "tests": [
+    {
+      "id": "TC001",
+      "title": "Product detail page loads after clicking product name",
+      "type": "ui",
+      "tags": ["smoke", "product-detail", "navigation"],
+      "expected": "Clicking a product name on the inventory page navigates to the product detail page with URL containing inventory-item.html",
+      "steps": [
+        { "action": "navigate",           "target": "${BASE_URL}",       "value": "" },
+        { "action": "fill",               "target": "username_input",    "value": "${LOGIN_USER}" },
+        { "action": "fill",               "target": "password_input",    "value": "${LOGIN_PASS}" },
+        { "action": "click",              "target": "login_button",      "value": "" },
+        { "action": "wait_for",           "target": "inventory_list",    "value": "" },
+        { "action": "click",              "target": "item_name",         "value": "" },
+        { "action": "assert_url_contains","target": "inventory-item.html","value": "" }
+      ]
+    },
+    {
+      "id": "TC002",
+      "title": "Product name is visible on the detail page",
+      "type": "ui",
+      "tags": ["smoke", "product-detail", "content"],
+      "expected": "After navigating to a product detail page the product name element is visible",
+      "steps": [
+        { "action": "navigate",        "target": "${BASE_URL}",    "value": "" },
+        { "action": "fill",            "target": "username_input", "value": "${LOGIN_USER}" },
+        { "action": "fill",            "target": "password_input", "value": "${LOGIN_PASS}" },
+        { "action": "click",           "target": "login_button",   "value": "" },
+        { "action": "wait_for",        "target": "inventory_list", "value": "" },
+        { "action": "click",           "target": "item_name",      "value": "" },
+        { "action": "wait_for",        "target": "product_name",   "value": "" },
+        { "action": "assert_visible",  "target": "product_name",   "value": "" }
+      ]
+    },
+    {
+      "id": "TC003",
+      "title": "Product description is visible on the detail page",
+      "type": "ui",
+      "tags": ["smoke", "product-detail", "content"],
+      "expected": "After navigating to a product detail page the product description text element is visible",
+      "steps": [
+        { "action": "navigate",        "target": "${BASE_URL}",        "value": "" },
+        { "action": "fill",            "target": "username_input",     "value": "${LOGIN_USER}" },
+        { "action": "fill",            "target": "password_input",     "value": "${LOGIN_PASS}" },
+        { "action": "click",           "target": "login_button",       "value": "" },
+        { "action": "wait_for",        "target": "inventory_list",     "value": "" },
+        { "action": "click",           "target": "item_name",          "value": "" },
+        { "action": "assert_visible",  "target": "product_description","value": "" }
+      ]
+    },
+    {
+      "id": "TC004",
+      "title": "Product price is displayed on the detail page",
+      "type": "ui",
+      "tags": ["smoke", "product-detail", "content"],
+      "expected": "After navigating to a product detail page the product price element is visible",
+      "steps": [
+        { "action": "navigate",        "target": "${BASE_URL}",    "value": "" },
+        { "action": "fill",            "target": "username_input", "value": "${LOGIN_USER}" },
+        { "action": "fill",            "target": "password_input", "value": "${LOGIN_PASS}" },
+        { "action": "click",           "target": "login_button",   "value": "" },
+        { "action": "wait_for",        "target": "inventory_list", "value": "" },
+        { "action": "click",           "target": "item_name",      "value": "" },
+        { "action": "assert_visible",  "target": "product_price",  "value": "" }
+      ]
+    },
+    {
+      "id": "TC005",
+      "title": "Add to cart button is present on the product detail page",
+      "type": "ui",
+      "tags": ["smoke", "product-detail", "add-to-cart"],
+      "expected": "The Add to Cart button is visible on the product detail page",
+      "steps": [
+        { "action": "navigate",        "target": "${BASE_URL}",    "value": "" },
+        { "action": "fill",            "target": "username_input", "value": "${LOGIN_USER}" },
+        { "action": "fill",            "target": "password_input", "value": "${LOGIN_PASS}" },
+        { "action": "click",           "target": "login_button",   "value": "" },
+        { "action": "wait_for",        "target": "inventory_list", "value": "" },
+        { "action": "click",           "target": "item_name",      "value": "" },
+        { "action": "wait_for",        "target": "add_to_cart",    "value": "" },
+        { "action": "assert_visible",  "target": "add_to_cart",    "value": "" }
+      ]
+    },
+    {
+      "id": "TC006",
+      "title": "Back to products button returns user to inventory listing",
+      "type": "ui",
+      "tags": ["regression", "product-detail", "navigation"],
+      "expected": "Clicking the back button from a product detail page returns to the inventory page",
+      "steps": [
+        { "action": "navigate",           "target": "${BASE_URL}",        "value": "" },
+        { "action": "fill",               "target": "username_input",     "value": "${LOGIN_USER}" },
+        { "action": "fill",               "target": "password_input",     "value": "${LOGIN_PASS}" },
+        { "action": "click",              "target": "login_button",       "value": "" },
+        { "action": "wait_for",           "target": "inventory_list",     "value": "" },
+        { "action": "click",              "target": "item_name",          "value": "" },
+        { "action": "assert_url_contains","target": "inventory-item.html","value": "" },
+        { "action": "click",              "target": "back_button",        "value": "" },
+        { "action": "assert_url_contains","target": "inventory.html",     "value": "" },
+        { "action": "assert_visible",     "target": "inventory_list",     "value": "" }
+      ]
+    }
+  ]
+}

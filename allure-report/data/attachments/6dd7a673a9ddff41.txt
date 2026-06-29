@@ -1,0 +1,24 @@
+=== REQUEST ===
+POST https://jsonplaceholder.typicode.com/posts
+Headers:
+  Accept: application/json
+  Content-Type: application/json
+Body:
+{"title": "AI Test Post", "body": "Created by automated test suite", "userId": 1}
+
+=== RESPONSE ===
+Status : 201
+Headers: {CF-RAY=a1369c8a9bd72ca1-SJC, Server=cloudflare, X-Ratelimit-Remaining=995, X-Content-Type-Options=nosniff, Connection=keep-alive, Cf-Cache-Status=DYNAMIC, Reporting-Endpoints=heroku-nel="https://nel.heroku.com/reports?s=kaU5RUnsH%2B7uAHHAqpTQFwSpeEjnhoDhyuqlTFIoNl8%3D&sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d&ts=1782753727", Pragma=no-cache, Date=Mon, 29 Jun 2026 17:22:07 GMT, Via=2.0 heroku-router, X-Ratelimit-Reset=1782753740, X-Ratelimit-Limit=1000, Access-Control-Expose-Headers=Location, Nel={"report_to":"heroku-nel","response_headers":["Via"],"max_age":3600,"success_fraction":0.01,"failure_fraction":0.1}, Etag=W/"66-7+0TRSzDqgLWOPDJuFLo8FArON8", Cache-Control=no-cache, Report-To={"group":"heroku-nel","endpoints":[{"url":"https://nel.heroku.com/reports?s=kaU5RUnsH%2B7uAHHAqpTQFwSpeEjnhoDhyuqlTFIoNl8%3D\u0026sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d\u0026ts=1782753727"}],"max_age":3600}, Access-Control-Allow-Credentials=true, Vary=Origin, X-HTTP-Method-Override, Accept-Encoding, Expires=-1, alt-svc=h3=":443"; ma=86400, Content-Length=102, X-Powered-By=Express, Location=https://jsonplaceholder.typicode.com/posts/101, Content-Type=application/json; charset=utf-8}
+Body:
+{
+    "title": "AI Test Post",
+    "body": "Created by automated test suite",
+    "userId": 1,
+    "id": 101
+}
+
+=== cURL REPRODUCTION ===
+curl -X POST "https://jsonplaceholder.typicode.com/posts" \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -d '{"title": "AI Test Post", "body": "Created by automated test suite", "userId": 1}'

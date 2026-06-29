@@ -1,0 +1,33 @@
+{
+  "id" : "TC004",
+  "title" : "Create new post returns 201 with server-assigned ID",
+  "type" : "api",
+  "tags" : [ "smoke", "posts", "post" ],
+  "expected" : "POST /posts returns HTTP 201 with a server-generated id and the submitted title",
+  "steps" : null,
+  "request" : {
+    "method" : "POST",
+    "url" : "https://jsonplaceholder.typicode.com/posts",
+    "params" : { },
+    "headers" : {
+      "Accept" : "application/json",
+      "Content-Type" : "application/json"
+    },
+    "body" : "{\"title\": \"AI Test Post\", \"body\": \"Created by automated test suite\", \"userId\": 1}"
+  },
+  "assertions" : [ {
+    "type" : "status_code",
+    "path" : "",
+    "expected" : "201"
+  }, {
+    "type" : "not_empty",
+    "path" : "id",
+    "expected" : "true"
+  }, {
+    "type" : "json_path",
+    "path" : "title",
+    "expected" : "AI Test Post"
+  } ],
+  "uiTest" : false,
+  "apiTest" : true
+}

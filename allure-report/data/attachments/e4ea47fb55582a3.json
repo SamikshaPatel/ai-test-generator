@@ -1,0 +1,28 @@
+{
+  "id" : "TC005",
+  "title" : "Comments response contains Content-Type application/json",
+  "type" : "api",
+  "tags" : [ "smoke", "comments", "headers" ],
+  "expected" : "GET /comments/1 returns a Content-Type header containing application/json",
+  "steps" : null,
+  "request" : {
+    "method" : "GET",
+    "url" : "https://jsonplaceholder.typicode.com/comments/1",
+    "params" : { },
+    "headers" : {
+      "Accept" : "application/json"
+    },
+    "body" : ""
+  },
+  "assertions" : [ {
+    "type" : "status_code",
+    "path" : "",
+    "expected" : "200"
+  }, {
+    "type" : "header",
+    "path" : "Content-Type",
+    "expected" : "application/json"
+  } ],
+  "uiTest" : false,
+  "apiTest" : true
+}

@@ -1,0 +1,2 @@
+Primary: .inventory_details_price1
+Healed with: .inventory_details_price

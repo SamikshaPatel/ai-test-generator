@@ -1,0 +1,32 @@
+{
+  "id" : "TC001",
+  "title" : "List all comments returns 200 with email field",
+  "type" : "api",
+  "tags" : [ "smoke", "comments", "get" ],
+  "expected" : "GET /comments returns HTTP 200 with a non-empty array where first comment has an email field",
+  "steps" : null,
+  "request" : {
+    "method" : "GET",
+    "url" : "https://jsonplaceholder.typicode.com/comments",
+    "params" : { },
+    "headers" : {
+      "Accept" : "application/json"
+    },
+    "body" : ""
+  },
+  "assertions" : [ {
+    "type" : "status_code",
+    "path" : "",
+    "expected" : "200"
+  }, {
+    "type" : "not_empty",
+    "path" : "[0].email",
+    "expected" : "true"
+  }, {
+    "type" : "not_empty",
+    "path" : "[0].body",
+    "expected" : "true"
+  } ],
+  "uiTest" : false,
+  "apiTest" : true
+}

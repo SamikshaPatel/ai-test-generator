@@ -1,0 +1,29 @@
+{
+  "id" : "TC005",
+  "title" : "Update post ID=1 returns updated title",
+  "type" : "api",
+  "tags" : [ "regression", "posts", "put" ],
+  "expected" : "PUT /posts/1 returns HTTP 200 with the updated title in the response",
+  "steps" : null,
+  "request" : {
+    "method" : "PUT",
+    "url" : "https://jsonplaceholder.typicode.com/posts/1",
+    "params" : { },
+    "headers" : {
+      "Accept" : "application/json",
+      "Content-Type" : "application/json"
+    },
+    "body" : "{\"id\": 1, \"title\": \"Updated Title\", \"body\": \"Updated body\", \"userId\": 1}"
+  },
+  "assertions" : [ {
+    "type" : "status_code",
+    "path" : "",
+    "expected" : "200"
+  }, {
+    "type" : "json_path",
+    "path" : "title",
+    "expected" : "Updated Title"
+  } ],
+  "uiTest" : false,
+  "apiTest" : true
+}

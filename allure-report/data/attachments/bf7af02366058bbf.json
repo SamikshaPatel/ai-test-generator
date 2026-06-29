@@ -1,0 +1,24 @@
+{
+  "id" : "TC003",
+  "title" : "Get non-existent user ID=9999 returns 404",
+  "type" : "api",
+  "tags" : [ "negative", "users", "get" ],
+  "expected" : "GET /users/9999 returns HTTP 404 indicating the user does not exist",
+  "steps" : null,
+  "request" : {
+    "method" : "GET",
+    "url" : "https://jsonplaceholder.typicode.com/users/9999",
+    "params" : { },
+    "headers" : {
+      "Accept" : "application/json"
+    },
+    "body" : ""
+  },
+  "assertions" : [ {
+    "type" : "status_code",
+    "path" : "",
+    "expected" : "404"
+  } ],
+  "uiTest" : false,
+  "apiTest" : true
+}

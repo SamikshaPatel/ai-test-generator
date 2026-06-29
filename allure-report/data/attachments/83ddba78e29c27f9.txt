@@ -1,0 +1,66 @@
+╔══════════════════════════════════════════════════════╗
+║           AGENT ACTIVITY REPORT                      ║
+╚══════════════════════════════════════════════════════╝
+Run ID    : F3E63D1B
+Timestamp : 2026-06-29T17:21:16.801863647Z
+Suite     : Product Detail Page
+
+── LOCATOR RESOLUTIONS (Page Object logical names used) ──
+  add_to_cart                    → .btn_primary
+  back_button                    → [data-test='back-to-products']
+  inventory_list                 → .inventory_list
+  item_name                      → .inventory_item_name1
+  login_button                   → #login-button
+  password_input                 → #password
+  product_description            → .inventory_details_desc
+  product_name                   → .inventory_details_name
+  product_price                  → .inventory_details_price1
+  username_input                 → #user-name
+
+── UNKNOWN TARGETS (not in PageRegistry — add to Page Object) ──
+  (none — all logical names resolved)
+
+── SELF-HEAL EVENTS (locator drift detected and recovered) ──
+  [TC002] click: .inventory_item_name1
+    → healed with: .inventory_item_name
+  [TC003] click: .inventory_item_name1
+    → healed with: .inventory_item_name
+  [TC005] click: .inventory_item_name1
+    → healed with: .inventory_item_name
+  [TC006] click: .inventory_item_name1
+    → healed with: .inventory_item_name
+  [TC001] click: .inventory_item_name1
+    → healed with: .inventory_item_name
+  [TC004] click: .inventory_item_name1
+    → healed with: .inventory_item_name
+  [TC004] assert_visible: .inventory_details_price1
+    → healed with: .inventory_details_price
+
+── TEST DATA VARIABLES RESOLVED ──
+  ${BASE_URL            } → https://www.saucedemo.com
+  ${LOGIN_PASS          } → ***
+  ${LOGIN_USER          } → standard_user
+
+── PAGE REGISTRY COVERAGE ──
+  Used   : 10/22 selectors (45%)
+  Unused : about, all_items, cart_badge, cart_link, close_button, error_message, item_price, logout, open_button, page_title, reset, sort_dropdown
+
+── AI TEST QUALITY SCORE ──
+╔══════════════════════════════════════╗
+║   AI TEST QUALITY SCORE:  36/100     ║
+╠══════════════════════════════════════╣
+║  Assertion Depth    :  11/25         ║
+║  Negative Coverage  :   0/25         ║
+║  Edge Case Coverage :   0/25         ║
+║  Step Realism       :  25/25         ║
+║  Tier               : POOR          ║
+╠══════════════════════════════════════╣
+║  Tests: 6 (6 UI / 0 API) | Avg UI st...║
+╚══════════════════════════════════════╝
+
+── SUMMARY ──
+  Logical names resolved : 10
+  Unknown targets        : 0
+  Self-heal events       : 7
+  Variables resolved     : 3
+  AI quality score       : 36/100 (POOR)

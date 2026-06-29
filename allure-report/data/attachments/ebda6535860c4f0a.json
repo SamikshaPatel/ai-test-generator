@@ -1,0 +1,93 @@
+{
+  "tests": [
+    {
+      "id": "TC001",
+      "title": "Valid login redirects to inventory page",
+      "type": "ui",
+      "tags": ["smoke", "login"],
+      "expected": "User with standard_user credentials is redirected to /inventory.html after login",
+      "steps": [
+        { "action": "navigate",            "target": "${BASE_URL}",       "value": "" },
+        { "action": "fill",                "target": "username_input",    "value": "${LOGIN_USER}" },
+        { "action": "fill",                "target": "password_input",    "value": "${LOGIN_PASS}" },
+        { "action": "click",               "target": "login_button",      "value": "" },
+        { "action": "assert_url_contains", "target": "/inventory.html",   "value": "" },
+        { "action": "assert_visible",      "target": "page_title",        "value": "" }
+      ]
+    },
+    {
+      "id": "TC002",
+      "title": "Inventory page title shows Products after login",
+      "type": "ui",
+      "tags": ["smoke", "inventory"],
+      "expected": "After login the page heading reads 'Products'",
+      "steps": [
+        { "action": "navigate",    "target": "${BASE_URL}",    "value": "" },
+        { "action": "fill",        "target": "username_input", "value": "${LOGIN_USER}" },
+        { "action": "fill",        "target": "password_input", "value": "${LOGIN_PASS}" },
+        { "action": "click",       "target": "login_button",   "value": "" },
+        { "action": "assert_text", "target": "page_title",     "value": "Products" }
+      ]
+    },
+    {
+      "id": "TC003",
+      "title": "Locked out user sees locked-out error message",
+      "type": "ui",
+      "tags": ["negative", "login"],
+      "expected": "Logging in with locked_out_user shows an error message containing 'locked out'",
+      "steps": [
+        { "action": "navigate",       "target": "${BASE_URL}",      "value": "" },
+        { "action": "fill",           "target": "username_input",   "value": "locked_out_user" },
+        { "action": "fill",           "target": "password_input",   "value": "${LOGIN_PASS}" },
+        { "action": "click",          "target": "login_button",     "value": "" },
+        { "action": "assert_visible", "target": "error_message",    "value": "" },
+        { "action": "assert_text",    "target": "error_message",    "value": "locked out" }
+      ]
+    },
+    {
+      "id": "TC004",
+      "title": "Wrong password shows credential mismatch error",
+      "type": "ui",
+      "tags": ["negative", "login"],
+      "expected": "Entering a wrong password shows an error message containing 'do not match'",
+      "steps": [
+        { "action": "navigate",       "target": "${BASE_URL}",      "value": "" },
+        { "action": "fill",           "target": "username_input",   "value": "${LOGIN_USER}" },
+        { "action": "fill",           "target": "password_input",   "value": "wrong_password" },
+        { "action": "click",          "target": "login_button",     "value": "" },
+        { "action": "assert_visible", "target": "error_message",    "value": "" },
+        { "action": "assert_text",    "target": "error_message",    "value": "do not match" }
+      ]
+    },
+    {
+      "id": "TC005",
+      "title": "Add to cart increments cart badge to 1",
+      "type": "ui",
+      "tags": ["smoke", "cart"],
+      "expected": "Clicking Add to cart on the first product shows badge count of 1 on the cart icon",
+      "steps": [
+        { "action": "navigate",       "target": "${BASE_URL}",    "value": "" },
+        { "action": "fill",           "target": "username_input", "value": "${LOGIN_USER}" },
+        { "action": "fill",           "target": "password_input", "value": "${LOGIN_PASS}" },
+        { "action": "click",          "target": "login_button",   "value": "" },
+        { "action": "wait_for",       "target": "inventory_list", "value": "" },
+        { "action": "click",          "target": "add_to_cart",    "value": "" },
+        { "action": "assert_visible", "target": "cart_badge",     "value": "" },
+        { "action": "assert_text",    "target": "cart_badge",     "value": "1" }
+      ]
+    },
+    {
+      "id": "TC006",
+      "title": "Empty username shows validation error",
+      "type": "ui",
+      "tags": ["negative", "edge-case", "login"],
+      "expected": "Submitting login form with blank username shows a validation error message",
+      "steps": [
+        { "action": "navigate",       "target": "${BASE_URL}",    "value": "" },
+        { "action": "fill",           "target": "password_input", "value": "${LOGIN_PASS}" },
+        { "action": "click",          "target": "login_button",   "value": "" },
+        { "action": "assert_visible", "target": "error_message",  "value": "" }
+      ]
+    }
+  ]
+}

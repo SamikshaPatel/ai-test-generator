@@ -1,0 +1,29 @@
+{
+  "id" : "TC006",
+  "title" : "Mark todo as complete via PATCH returns completed=true",
+  "type" : "api",
+  "tags" : [ "regression", "todos", "patch" ],
+  "expected" : "PATCH /todos/1 with completed=true returns HTTP 200 with completed field set to true",
+  "steps" : null,
+  "request" : {
+    "method" : "PATCH",
+    "url" : "https://jsonplaceholder.typicode.com/todos/1",
+    "params" : { },
+    "headers" : {
+      "Accept" : "application/json",
+      "Content-Type" : "application/json"
+    },
+    "body" : "{\"completed\": true}"
+  },
+  "assertions" : [ {
+    "type" : "status_code",
+    "path" : "",
+    "expected" : "200"
+  }, {
+    "type" : "json_path",
+    "path" : "completed",
+    "expected" : "true"
+  } ],
+  "uiTest" : false,
+  "apiTest" : true
+}

@@ -1,0 +1,36 @@
+{
+  "id" : "TC002",
+  "title" : "Get single user ID=2 validates response schema",
+  "type" : "api",
+  "tags" : [ "smoke", "users", "get", "contract" ],
+  "expected" : "GET /users/2 returns HTTP 200 with a response matching the user JSON Schema",
+  "steps" : null,
+  "request" : {
+    "method" : "GET",
+    "url" : "https://jsonplaceholder.typicode.com/users/2",
+    "params" : { },
+    "headers" : {
+      "Accept" : "application/json"
+    },
+    "body" : ""
+  },
+  "assertions" : [ {
+    "type" : "status_code",
+    "path" : "",
+    "expected" : "200"
+  }, {
+    "type" : "json_path",
+    "path" : "id",
+    "expected" : "2"
+  }, {
+    "type" : "not_empty",
+    "path" : "email",
+    "expected" : "true"
+  }, {
+    "type" : "schema_file",
+    "path" : "",
+    "expected" : "user.schema.json"
+  } ],
+  "uiTest" : false,
+  "apiTest" : true
+}

@@ -1,0 +1,9 @@
+AI Test Generation Summary
+===========================
+Model Used    : claude.ai subscription (file mode)
+Generated At  : 2026-06-29T17:20:51.940199967Z
+Story Source  : file:src/main/resources/stories/generated/login-ui-tests.json
+Retry Count   : 0
+Total Tests   : 6
+  UI Tests    : 6
+  API Tests   : 0

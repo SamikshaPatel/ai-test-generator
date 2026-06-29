@@ -1,0 +1,34 @@
+{
+  "id" : "TC007",
+  "title" : "List posts for user ID=1 returns non-empty results",
+  "type" : "api",
+  "tags" : [ "edge-case", "posts", "filter" ],
+  "expected" : "GET /posts?userId=1 returns HTTP 200 with posts belonging to user 1",
+  "steps" : null,
+  "request" : {
+    "method" : "GET",
+    "url" : "https://jsonplaceholder.typicode.com/posts",
+    "params" : {
+      "userId" : "1"
+    },
+    "headers" : {
+      "Accept" : "application/json"
+    },
+    "body" : ""
+  },
+  "assertions" : [ {
+    "type" : "status_code",
+    "path" : "",
+    "expected" : "200"
+  }, {
+    "type" : "not_empty",
+    "path" : "[0].title",
+    "expected" : "true"
+  }, {
+    "type" : "json_path",
+    "path" : "[0].userId",
+    "expected" : "1"
+  } ],
+  "uiTest" : false,
+  "apiTest" : true
+}

@@ -1,0 +1,36 @@
+{
+  "id" : "TC001",
+  "title" : "List all posts returns 200 with non-empty array",
+  "type" : "api",
+  "tags" : [ "smoke", "posts", "get" ],
+  "expected" : "GET /posts returns HTTP 200 with a non-empty array of post objects each having title and userId",
+  "steps" : null,
+  "request" : {
+    "method" : "GET",
+    "url" : "https://jsonplaceholder.typicode.com/posts",
+    "params" : { },
+    "headers" : {
+      "Accept" : "application/json"
+    },
+    "body" : ""
+  },
+  "assertions" : [ {
+    "type" : "status_code",
+    "path" : "",
+    "expected" : "200"
+  }, {
+    "type" : "not_empty",
+    "path" : "[0].title",
+    "expected" : "true"
+  }, {
+    "type" : "not_empty",
+    "path" : "[0].userId",
+    "expected" : "true"
+  }, {
+    "type" : "response_time_ms",
+    "path" : "",
+    "expected" : "3000"
+  } ],
+  "uiTest" : false,
+  "apiTest" : true
+}

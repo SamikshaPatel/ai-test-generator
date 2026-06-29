@@ -1,0 +1,9 @@
+AI Test Generation Summary
+===========================
+Model Used    : claude.ai subscription (file mode)
+Generated At  : 2026-06-29T17:22:59.035012920Z
+Story Source  : file:src/main/resources/stories/generated/posts-api-tests.json
+Retry Count   : 0
+Total Tests   : 8
+  UI Tests    : 0
+  API Tests   : 8

@@ -1,0 +1,36 @@
+{
+  "id" : "TC001",
+  "title" : "List users returns 200 with non-empty data within SLA",
+  "type" : "api",
+  "tags" : [ "smoke", "users", "get" ],
+  "expected" : "GET /users returns HTTP 200 with a non-empty array of user objects within 3000ms",
+  "steps" : null,
+  "request" : {
+    "method" : "GET",
+    "url" : "https://jsonplaceholder.typicode.com/users",
+    "params" : { },
+    "headers" : {
+      "Accept" : "application/json"
+    },
+    "body" : ""
+  },
+  "assertions" : [ {
+    "type" : "status_code",
+    "path" : "",
+    "expected" : "200"
+  }, {
+    "type" : "not_empty",
+    "path" : "[0].name",
+    "expected" : "true"
+  }, {
+    "type" : "not_empty",
+    "path" : "[0].email",
+    "expected" : "true"
+  }, {
+    "type" : "response_time_ms",
+    "path" : "",
+    "expected" : "3000"
+  } ],
+  "uiTest" : false,
+  "apiTest" : true
+}

@@ -1,0 +1,29 @@
+{
+  "id" : "TC005",
+  "title" : "Partial update post ID=1 via PATCH returns updated title",
+  "type" : "api",
+  "tags" : [ "regression", "posts", "patch" ],
+  "expected" : "PATCH /posts/1 with only title returns HTTP 200 with the patched title",
+  "steps" : null,
+  "request" : {
+    "method" : "PATCH",
+    "url" : "https://jsonplaceholder.typicode.com/posts/1",
+    "params" : { },
+    "headers" : {
+      "Accept" : "application/json",
+      "Content-Type" : "application/json"
+    },
+    "body" : "{\"title\": \"Patched Title\"}"
+  },
+  "assertions" : [ {
+    "type" : "status_code",
+    "path" : "",
+    "expected" : "200"
+  }, {
+    "type" : "json_path",
+    "path" : "title",
+    "expected" : "Patched Title"
+  } ],
+  "uiTest" : false,
+  "apiTest" : true
+}

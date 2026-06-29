@@ -5,13 +5,13 @@
 #
 #   ┌─────────────────────────────────────────────────────┐
 #   │  smoke (matrix: chromium/firefox/webkit)            │  ← always on push/PR
-#   │  28/53 tests tagged "smoke" — ~5 min wall-clock     │
+#   │  34/58 tests tagged "smoke" — ~5 min wall-clock     │
 #   └──────────────────────┬──────────────────────────────┘
 #                          │ all browsers green?
 #                          ▼
 #   ┌─────────────────────────────────────────────────────┐
 #   │  full-test (matrix: chromium/firefox/webkit)        │  ← main push + schedule + dispatch
-#   │  All 53 tests — ~15 min wall-clock                  │
+#   │  All 58 tests — ~15 min wall-clock                  │
 #   └──────────────────────┬──────────────────────────────┘
 #                          │ uploads allure-results-{browser}
 #                          ▼
@@ -138,7 +138,7 @@ jobs:
           retention-days: 3
 
 # ─────────────────────────────────────────────────────────────────────────────
-# JOB 2 — Full test suite (all 53 tests, ~15 min)
+# JOB 2 — Full test suite (all 58 tests, ~15 min)
 #   Runs on: main push (after smoke gate), schedule, manual full/all dispatch
 #   Requires: smoke gate passed (unless schedule/manual)
 # ─────────────────────────────────────────────────────────────────────────────
@@ -261,19 +261,18 @@ jobs:
 
       - name: Merge results from all browsers
         run: |
-          mkdir -p target/allure-results-merged
+          mkdir -p target/allure-results
           for dir in downloaded-results/allure-results-*/; do
             browser=$(basename "$dir" | sed 's/allure-results-//')
             count=$(find "$dir" -type f | wc -l)
             echo "Merging $browser: $count files"
-            cp -r "$dir". target/allure-results-merged/ 2>/dev/null || true
+            cp -r "$dir". target/allure-results/ 2>/dev/null || true
           done
-          echo "Total merged: $(find target/allure-results-merged -type f | wc -l) files"
+          echo "Total merged: $(find target/allure-results -type f | wc -l) files"
 
       - name: Generate Allure HTML report
         run: |
           mvn allure:report \
-            -Dallure.results.directory=target/allure-results-merged \
             --no-transfer-progress -q
 
       - name: Upload Allure HTML report artifact

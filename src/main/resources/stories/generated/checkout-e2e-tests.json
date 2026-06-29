@@ -1,0 +1,122 @@
+{
+  "tests": [
+    {
+      "id": "TC001",
+      "title": "Full checkout flow completes with order confirmation",
+      "type": "ui",
+      "tags": ["smoke", "e2e", "checkout", "happy-path"],
+      "expected": "User logs in, adds item, completes checkout and sees 'Thank you for your order' confirmation",
+      "steps": [
+        { "action": "navigate",            "target": "${BASE_URL}",                 "value": "" },
+        { "action": "fill",                "target": "username_input",              "value": "${LOGIN_USER}" },
+        { "action": "fill",                "target": "password_input",              "value": "${LOGIN_PASS}" },
+        { "action": "click",               "target": "login_button",                "value": "" },
+        { "action": "wait_for",            "target": "inventory_list",              "value": "" },
+        { "action": "click",               "target": "add_to_cart",                 "value": "" },
+        { "action": "wait_for",            "target": "cart_badge",                  "value": "" },
+        { "action": "click",               "target": "cart_link",                   "value": "" },
+        { "action": "assert_url_contains", "target": "cart.html",                   "value": "" },
+        { "action": "click",               "target": ".checkout_button",            "value": "",
+          "fallback_targets": ["[data-test='checkout']", "button.checkout_button"] },
+        { "action": "assert_url_contains", "target": "checkout-step-one.html",      "value": "" },
+        { "action": "fill",                "target": "[data-test='firstName']",     "value": "QA" },
+        { "action": "fill",                "target": "[data-test='lastName']",      "value": "Tester" },
+        { "action": "fill",                "target": "[data-test='postalCode']",    "value": "12345" },
+        { "action": "click",               "target": "[data-test='continue']",      "value": "" },
+        { "action": "assert_url_contains", "target": "checkout-step-two.html",      "value": "" },
+        { "action": "click",               "target": "[data-test='finish']",        "value": "" },
+        { "action": "assert_url_contains", "target": "checkout-complete.html",      "value": "" },
+        { "action": "assert_visible",      "target": ".complete-header",            "value": "" }
+      ]
+    },
+    {
+      "id": "TC002",
+      "title": "Cart shows added item before checkout",
+      "type": "ui",
+      "tags": ["smoke", "e2e", "cart"],
+      "expected": "After adding an item and navigating to cart, the cart URL is correct and item appears",
+      "steps": [
+        { "action": "navigate",            "target": "${BASE_URL}",    "value": "" },
+        { "action": "fill",                "target": "username_input", "value": "${LOGIN_USER}" },
+        { "action": "fill",                "target": "password_input", "value": "${LOGIN_PASS}" },
+        { "action": "click",               "target": "login_button",   "value": "" },
+        { "action": "wait_for",            "target": "inventory_list", "value": "" },
+        { "action": "click",               "target": "add_to_cart",    "value": "" },
+        { "action": "click",               "target": "cart_link",      "value": "" },
+        { "action": "assert_url_contains", "target": "cart.html",      "value": "" },
+        { "action": "assert_visible",      "target": ".cart_quantity", "value": "" }
+      ]
+    },
+    {
+      "id": "TC003",
+      "title": "Checkout step 1 requires all fields to continue",
+      "type": "ui",
+      "tags": ["negative", "checkout", "validation"],
+      "expected": "Clicking Continue on checkout step 1 without filling fields shows an error",
+      "steps": [
+        { "action": "navigate",            "target": "${BASE_URL}",                "value": "" },
+        { "action": "fill",                "target": "username_input",             "value": "${LOGIN_USER}" },
+        { "action": "fill",                "target": "password_input",             "value": "${LOGIN_PASS}" },
+        { "action": "click",               "target": "login_button",               "value": "" },
+        { "action": "wait_for",            "target": "inventory_list",             "value": "" },
+        { "action": "click",               "target": "add_to_cart",                "value": "" },
+        { "action": "click",               "target": "cart_link",                  "value": "" },
+        { "action": "click",               "target": ".checkout_button",           "value": "",
+          "fallback_targets": ["[data-test='checkout']"] },
+        { "action": "assert_url_contains", "target": "checkout-step-one.html",    "value": "" },
+        { "action": "click",               "target": "[data-test='continue']",     "value": "" },
+        { "action": "assert_visible",      "target": "[data-test='error']",        "value": "",
+          "fallback_targets": [".error-message-container h3"] }
+      ]
+    },
+    {
+      "id": "TC004",
+      "title": "Order summary on step 2 shows item total and tax",
+      "type": "ui",
+      "tags": ["smoke", "e2e", "checkout"],
+      "expected": "Checkout step 2 shows item subtotal and tax breakdown before finishing",
+      "steps": [
+        { "action": "navigate",            "target": "${BASE_URL}",                "value": "" },
+        { "action": "fill",                "target": "username_input",             "value": "${LOGIN_USER}" },
+        { "action": "fill",                "target": "password_input",             "value": "${LOGIN_PASS}" },
+        { "action": "click",               "target": "login_button",               "value": "" },
+        { "action": "wait_for",            "target": "inventory_list",             "value": "" },
+        { "action": "click",               "target": "add_to_cart",                "value": "" },
+        { "action": "click",               "target": "cart_link",                  "value": "" },
+        { "action": "click",               "target": ".checkout_button",           "value": "",
+          "fallback_targets": ["[data-test='checkout']"] },
+        { "action": "fill",                "target": "[data-test='firstName']",    "value": "QA" },
+        { "action": "fill",                "target": "[data-test='lastName']",     "value": "Tester" },
+        { "action": "fill",                "target": "[data-test='postalCode']",   "value": "12345" },
+        { "action": "click",               "target": "[data-test='continue']",     "value": "" },
+        { "action": "assert_url_contains", "target": "checkout-step-two.html",    "value": "" },
+        { "action": "assert_visible",      "target": ".summary_subtotal_label",   "value": "" },
+        { "action": "assert_visible",      "target": ".summary_tax_label",        "value": "" }
+      ]
+    },
+    {
+      "id": "TC005",
+      "title": "Checkout complete header text confirms order success",
+      "type": "ui",
+      "tags": ["smoke", "e2e", "checkout"],
+      "expected": "The checkout complete page header contains 'Thank you' confirming the order",
+      "steps": [
+        { "action": "navigate",            "target": "${BASE_URL}",                "value": "" },
+        { "action": "fill",                "target": "username_input",             "value": "${LOGIN_USER}" },
+        { "action": "fill",                "target": "password_input",             "value": "${LOGIN_PASS}" },
+        { "action": "click",               "target": "login_button",               "value": "" },
+        { "action": "wait_for",            "target": "inventory_list",             "value": "" },
+        { "action": "click",               "target": "add_to_cart",                "value": "" },
+        { "action": "click",               "target": "cart_link",                  "value": "" },
+        { "action": "click",               "target": ".checkout_button",           "value": "",
+          "fallback_targets": ["[data-test='checkout']"] },
+        { "action": "fill",                "target": "[data-test='firstName']",    "value": "QA" },
+        { "action": "fill",                "target": "[data-test='lastName']",     "value": "Tester" },
+        { "action": "fill",                "target": "[data-test='postalCode']",   "value": "12345" },
+        { "action": "click",               "target": "[data-test='continue']",     "value": "" },
+        { "action": "click",               "target": "[data-test='finish']",       "value": "" },
+        { "action": "assert_text",         "target": ".complete-header",           "value": "Thank you" }
+      ]
+    }
+  ]
+}

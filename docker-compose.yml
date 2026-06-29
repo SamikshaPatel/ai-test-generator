@@ -1,0 +1,162 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# AI Test Generator — Multi-browser parallel test execution
+#
+# Pipeline (smoke-first, enterprise pattern):
+#
+#   ┌─────────────────────────────────────────────┐
+#   │  smoke  (chromium, 28 smoke-tagged tests)   │  ← fast gate, ~5 min
+#   └──────────────────┬──────────────────────────┘
+#                      │ service_completed_successfully
+#                      ▼
+#   ┌──────────────┬──────────────┬──────────────┬──────────────┐
+#   │ chromium-ui  │  firefox-ui  │  webkit-ui   │     api      │
+#   │  24 UI tests │  24 UI tests │  24 UI tests │ 29 API tests │
+#   │  (Playwright)│  (Playwright)│  (Playwright)│(RestAssured) │
+#   │  ~20 min     │  ~25 min     │  ~25 min     │  ~2 min      │
+#   └──────────────┴──────────────┴──────────────┴──────────────┘
+#                      │ all finish
+#                      ▼
+#              ./ci/merge-and-report.sh
+#           (merges chromium + firefox + webkit + api → Allure)
+#
+# API tests run ONCE in a dedicated container — browser-agnostic (RestAssured).
+# Results are merged with the 3 browser UI sets: 24 UI×3 + 29 API×1 = 103 unique
+# test scenarios in Allure, which is the correct enterprise view.
+#
+# Usage:
+#   docker-compose up --build                      # full pipeline
+#   docker-compose up --build chromium-ui          # single browser UI tests (skips gate)
+#   docker-compose up --build api                  # API tests only
+#   docker-compose down -v                         # stop + remove volumes
+#
+# Secrets (optional — falls back to test-data.properties demo values):
+#   Create .env in project root (gitignored):
+#     ANTHROPIC_API_KEY=sk-ant-...
+#     LOGIN_PASS=your_real_password
+#
+# After all containers finish, generate the merged Allure report:
+#   ./ci/merge-and-report.sh
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Shared base config ─────────────────────────────────────────────────────
+x-test-common: &test-common
+  build:
+    context: .
+    dockerfile: Dockerfile
+  env_file:
+    - path: .env
+      required: false
+  # Docker Desktop on macOS routes DNS through Apple's Hypervisor bridge, which
+  # can add 5–20s latency per resolution.  Pinning to 8.8.8.8 bypasses this.
+  dns:
+    - 8.8.8.8
+    - 8.8.4.4
+  restart: "no"
+
+# ── Services ──────────────────────────────────────────────────────────────
+# NOTE: Each service defines its own `environment:` block — YAML merge keys
+# (<<: *anchor) do NOT deep-merge maps; a service-level block silently replaces
+# the anchor's block, dropping inherited values.
+services:
+
+  # ── Stage 1: Smoke gate ──────────────────────────────────────────────────
+  # Runs 28 smoke-tagged tests (mix of UI and API) on Chromium only.
+  # All Stage 2 containers depend on this succeeding before they start.
+  smoke:
+    <<: *test-common
+    platform: linux/amd64
+    shm_size: '512mb'
+    environment:
+      HEADLESS: "true"
+      BROWSER: chromium
+      SMOKE_ONLY: "true"
+      TIMEOUT_MS: "60000"
+      RETRY_MAX: "0"
+    volumes:
+      - allure-smoke:/app/target/allure-results     # kept for debug; not merged into final report
+
+  # ── Stage 2a: Chromium UI tests ──────────────────────────────────────────
+  chromium-ui:
+    <<: *test-common
+    platform: linux/amd64
+    shm_size: '512mb'
+    depends_on:
+      smoke:
+        condition: service_completed_successfully   # aborts if smoke gate fails
+    environment:
+      HEADLESS: "true"
+      BROWSER: chromium
+      UI_ONLY: "true"
+      TIMEOUT_MS: "60000"
+      RETRY_MAX: "0"
+    volumes:
+      - allure-chromium:/app/target/allure-results
+      - test-history:/app/test-history
+
+  # ── Stage 2b: Firefox UI tests ───────────────────────────────────────────
+  firefox-ui:
+    <<: *test-common
+    platform: linux/amd64
+    depends_on:
+      smoke:
+        condition: service_completed_successfully
+    environment:
+      HEADLESS: "true"
+      BROWSER: firefox
+      UI_ONLY: "true"
+      TIMEOUT_MS: "60000"
+      RETRY_MAX: "0"
+    volumes:
+      - allure-firefox:/app/target/allure-results
+      - test-history:/app/test-history
+
+  # ── Stage 2c: WebKit UI tests ────────────────────────────────────────────
+  webkit-ui:
+    <<: *test-common
+    platform: linux/amd64
+    depends_on:
+      smoke:
+        condition: service_completed_successfully
+    environment:
+      HEADLESS: "true"
+      BROWSER: webkit
+      UI_ONLY: "true"
+      TIMEOUT_MS: "60000"
+      RETRY_MAX: "0"
+    volumes:
+      - allure-webkit:/app/target/allure-results
+      - test-history:/app/test-history
+
+  # ── Stage 2d: API tests (browser-agnostic, runs once) ────────────────────
+  # RestAssured only — no browser launched.  Parallel execution is safe.
+  # Results count once in Allure regardless of how many UI browser containers run.
+  api:
+    <<: *test-common
+    platform: linux/amd64
+    depends_on:
+      smoke:
+        condition: service_completed_successfully
+    environment:
+      HEADLESS: "true"
+      BROWSER: none                                  # no browser used — RestAssured only
+      API_ONLY: "true"
+      TIMEOUT_MS: "30000"                            # HTTP timeouts only — no Rosetta overhead
+      RETRY_MAX: "0"
+    volumes:
+      - allure-api:/app/target/allure-results
+      - test-history:/app/test-history
+
+# ── Named volumes ──────────────────────────────────────────────────────────
+# allure-smoke     : smoke gate results (debug only, not merged into final report)
+# allure-chromium  : UI tests, chromium
+# allure-firefox   : UI tests, firefox
+# allure-webkit    : UI tests, webkit
+# allure-api       : API tests (browser-agnostic, merged once)
+# test-history     : shared across all containers — cumulative trend data
+volumes:
+  allure-smoke:
+  allure-chromium:
+  allure-firefox:
+  allure-webkit:
+  allure-api:
+  test-history:

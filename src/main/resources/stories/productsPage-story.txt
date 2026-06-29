@@ -1,0 +1,15 @@
+# Ths is a comment and will be ignored:
+# To generate json based test cases, use the following command in CLI: read PromptTemplates.java >  SystemPrompt method>
+# and then read productsPage-story.txt (this is your user story)> create the tests now in json format as per system prompt.
+# Generate a json file
+
+As a customer, I want to see the products on the Sauce Demo e-commerce site upon successful login
+so that I can browse and add products to my cart.
+
+SITE URL: https://www.saucedemo.com
+
+TEST ACCOUNTS (use exactly these credentials):
+  Valid user   : standard_user / secret_sauce
+
+--pre-steps "1. Navigate to https://www.saucedemo.com  2. Login as standard_user / secret_sauce" 3. navigates to "https://www.saucedemo.com/inventory.html" 4. verify the products display information
+--notes     "This page is the main products listing page after login. It shows 6 inventory items. Features: sort dropdown (A-Z, Z-A, price low-high, price high-low), Add to cart / Remove buttons per item, cart badge count in header, burger menu (All Items, About, Logout, Reset App State), and item name links that navigate to the product detail page. Expected page title is 'Products'.

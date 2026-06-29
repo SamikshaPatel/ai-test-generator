@@ -1,0 +1,34 @@
+As a QA engineer, I want to verify the Todos API endpoints on JSONPlaceholder
+so that I can confirm retrieval, filtering, status fields, and CRUD operations work as expected.
+
+API BASE URL: https://jsonplaceholder.typicode.com
+
+ENDPOINTS TO TEST:
+  GET    /todos              — retrieves all todos (array of 200 objects)
+  GET    /todos/{id}         — retrieves a single todo by ID
+  GET    /todos?userId={id}  — filters todos by userId
+  GET    /todos?completed=true — filters for completed todos only
+  POST   /todos              — creates a new todo (returns 201)
+  DELETE /todos/{id}         — deletes a todo (returns 200)
+
+RESPONSE SHAPE (GET /todos/1):
+  {
+    "userId": 1,
+    "id": 1,
+    "title": "delectus aut autem",
+    "completed": false
+  }
+
+ACCEPTANCE CRITERIA:
+  - GET /todos returns 200 with a non-empty array; items have userId, id, title, completed
+  - GET /todos/1 returns 200 with id=1 and completed field present
+  - GET /todos/9999 returns 404 for non-existent todo
+  - GET /todos?userId=1 returns 200 with todos belonging to user 1
+  - GET /todos?completed=true returns 200 with todos where completed=true
+  - POST /todos with title and userId returns 201 with generated id
+  - DELETE /todos/1 returns 200
+
+NOTES:
+  - JSONPlaceholder is a read-only fake API — mutations are simulated
+  - "completed" is a boolean field — presence and type matter
+  - No authentication required

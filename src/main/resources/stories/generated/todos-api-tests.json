@@ -1,0 +1,134 @@
+{
+  "tests": [
+    {
+      "id": "TC001",
+      "title": "List all todos returns 200 with completed field present",
+      "type": "api",
+      "tags": ["smoke", "todos", "get"],
+      "expected": "GET /todos returns HTTP 200 with a non-empty array of todo objects each having a completed field",
+      "request": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/todos",
+        "params": {},
+        "headers": { "Accept": "application/json" },
+        "body": ""
+      },
+      "assertions": [
+        { "type": "status_code",  "path": "",               "expected": "200" },
+        { "type": "not_empty",    "path": "[0].title",      "expected": "true" },
+        { "type": "body_contains","path": "",               "expected": "completed" }
+      ]
+    },
+    {
+      "id": "TC002",
+      "title": "Get single todo ID=1 returns incomplete todo",
+      "type": "api",
+      "tags": ["smoke", "todos", "get"],
+      "expected": "GET /todos/1 returns HTTP 200 with id=1 and completed=false",
+      "request": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/todos/1",
+        "params": {},
+        "headers": { "Accept": "application/json" },
+        "body": ""
+      },
+      "assertions": [
+        { "type": "status_code", "path": "",          "expected": "200" },
+        { "type": "json_path",   "path": "id",        "expected": "1" },
+        { "type": "json_path",   "path": "completed", "expected": "false" }
+      ]
+    },
+    {
+      "id": "TC003",
+      "title": "Filter todos by userId=1 returns only user 1 todos",
+      "type": "api",
+      "tags": ["regression", "todos", "filter"],
+      "expected": "GET /todos?userId=1 returns HTTP 200 with todos all belonging to userId 1",
+      "request": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/todos",
+        "params": { "userId": "1" },
+        "headers": { "Accept": "application/json" },
+        "body": ""
+      },
+      "assertions": [
+        { "type": "status_code", "path": "",             "expected": "200" },
+        { "type": "json_path",   "path": "[0].userId",   "expected": "1" },
+        { "type": "not_empty",   "path": "[0].title",    "expected": "true" }
+      ]
+    },
+    {
+      "id": "TC004",
+      "title": "Filter todos by completed=false returns only incomplete todos",
+      "type": "api",
+      "tags": ["regression", "todos", "filter"],
+      "expected": "GET /todos?completed=false returns HTTP 200 with todos all having completed=false",
+      "request": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/todos",
+        "params": { "completed": "false" },
+        "headers": { "Accept": "application/json" },
+        "body": ""
+      },
+      "assertions": [
+        { "type": "status_code", "path": "",              "expected": "200" },
+        { "type": "json_path",   "path": "[0].completed", "expected": "false" },
+        { "type": "not_empty",   "path": "[0].title",     "expected": "true" }
+      ]
+    },
+    {
+      "id": "TC005",
+      "title": "Create new todo returns 201 with server-assigned ID",
+      "type": "api",
+      "tags": ["smoke", "todos", "post"],
+      "expected": "POST /todos returns HTTP 201 with a generated id and the submitted title",
+      "request": {
+        "method": "POST",
+        "url": "https://jsonplaceholder.typicode.com/todos",
+        "params": {},
+        "headers": { "Accept": "application/json", "Content-Type": "application/json" },
+        "body": "{\"title\": \"Write more tests\", \"completed\": false, \"userId\": 1}"
+      },
+      "assertions": [
+        { "type": "status_code", "path": "",      "expected": "201" },
+        { "type": "not_empty",   "path": "id",    "expected": "true" },
+        { "type": "json_path",   "path": "title", "expected": "Write more tests" }
+      ]
+    },
+    {
+      "id": "TC006",
+      "title": "Mark todo as complete via PATCH returns completed=true",
+      "type": "api",
+      "tags": ["regression", "todos", "patch"],
+      "expected": "PATCH /todos/1 with completed=true returns HTTP 200 with completed field set to true",
+      "request": {
+        "method": "PATCH",
+        "url": "https://jsonplaceholder.typicode.com/todos/1",
+        "params": {},
+        "headers": { "Accept": "application/json", "Content-Type": "application/json" },
+        "body": "{\"completed\": true}"
+      },
+      "assertions": [
+        { "type": "status_code", "path": "",          "expected": "200" },
+        { "type": "json_path",   "path": "completed", "expected": "true" }
+      ]
+    },
+    {
+      "id": "TC007",
+      "title": "Get non-existent todo ID=9999 returns 404",
+      "type": "api",
+      "tags": ["negative", "todos", "get"],
+      "expected": "GET /todos/9999 returns HTTP 404 when the todo does not exist",
+      "request": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/todos/9999",
+        "params": {},
+        "headers": { "Accept": "application/json" },
+        "body": ""
+      },
+      "assertions": [
+        { "type": "status_code", "path": "", "expected": "404" }
+      ]
+    }
+  ]
+}

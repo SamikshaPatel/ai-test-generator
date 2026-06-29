@@ -1,0 +1,18 @@
+target/
+.idea/
+*.iml
+*.class
+*.DS_Store
+.env
+*.log
+.claude/
+.allure/
+Docs_Screenshots/
+
+# Keep test-history/ committed — it stores trend data across runs
+# test-history/  ← intentionally NOT ignored
+
+# Sensitive credential overrides — never commit real secrets
+test-data-secrets.properties
+*-credentials.properties
+secrets.properties

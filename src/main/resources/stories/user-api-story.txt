@@ -1,0 +1,22 @@
+As a system integrator, I want to interact with the User API
+so that I can retrieve, create, and manage user records reliably.
+
+SYSTEM UNDER TEST: https://jsonplaceholder.typicode.com
+
+API ENDPOINTS AVAILABLE:
+  GET  /users          — list all users. Returns: [{ id, name, username, email, ... }]
+  GET  /users/{id}     — get single user by ID. Returns: { id, name, username, email }
+  GET  /users/9999     — non-existent user. Returns: HTTP 404
+
+ACCEPTANCE CRITERIA:
+  - Listing users returns HTTP 200 with a non-empty array
+  - First user in the list has a non-empty name and email
+  - Getting user with ID 2 returns HTTP 200 with id=2 and email present
+  - Getting a user with ID 9999 (non-existent) returns HTTP 404
+  - Creating a new user via POST /users returns HTTP 201 with a generated id
+
+NOTES:
+  - Base URL is https://jsonplaceholder.typicode.com
+  - This is a free public mock API — no authentication required
+  - All requests should include Accept: application/json header
+  - jsonplaceholder simulates mutations (POST/PUT/PATCH/DELETE) but does not persist them

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Agent Activity — Product Detail Page</title>
+  <style>
+    body { background:#0f1117; color:#e2e8f0; font-family:monospace; padding:24px; margin:0; }
+    h2   { color:#7c3aed; margin-bottom:4px; }
+    .sub { color:#64748b; font-size:0.85em; margin-bottom:20px; }
+    pre  { background:#1e2130; border:1px solid #2d3148; border-radius:8px;
+           padding:20px; white-space:pre-wrap; word-break:break-word;
+           font-size:0.88em; line-height:1.6; }
+  </style>
+</head>
+<body>
+  <h2>Agent Activity Report — Product Detail Page</h2>
+  <p class="sub">Run: RUN-C351A64E @ 2026-05-13T13:49:42.040804Z</p>
+  <pre>╔══════════════════════════════════════════════════════╗
+║           AGENT ACTIVITY REPORT                      ║
+╚══════════════════════════════════════════════════════╝
+Run ID    : C351A64E
+Timestamp : 2026-05-13T13:49:42.040804Z
+Suite     : Product Detail Page
+
+── LOCATOR RESOLUTIONS (Page Object logical names used) ──
+  add_to_cart                    → .btn_primary
+  inventory_list                 → .inventory_list
+  item_name                      → .inventory_item_name1
+  login_button                   → #login-button
+  password_input                 → #password
+  product_description            → .inventory_details_desc
+  product_name                   → .inventory_details_name
+  product_price                  → .inventory_details_price1
+  username_input                 → #user-name
+
+── UNKNOWN TARGETS (not in PageRegistry — add to Page Object) ──
+  (none — all logical names resolved)
+
+── SELF-HEAL EVENTS (locator drift detected and recovered) ──
+  [TC005] click: .inventory_item_name1
+    → healed with: .inventory_item_name
+  [TC002] click: .inventory_item_name1
+    → healed with: .inventory_item_name
+  [TC004] click: .inventory_item_name1
+    → healed with: .inventory_item_name
+  [TC001] click: .inventory_item_name1
+    → healed with: .inventory_item_name
+  [TC003] click: .inventory_item_name1
+    → healed with: .inventory_item_name
+  [TC004] assert_visible: .inventory_details_price1
+    → healed with: .inventory_details_price
+
+── TEST DATA VARIABLES RESOLVED ──
+  ${BASE_URL            } → https://www.saucedemo.com
+  ${LOGIN_PASS          } → ***
+  ${LOGIN_USER          } → standard_user
+
+── PAGE REGISTRY COVERAGE ──
+  Used   : 9/22 selectors (40%)
+  Unused : about, all_items, back_button, cart_badge, cart_link, close_button, error_message, item_price, logout, open_button, page_title, reset, sort_dropdown
+
+── SUMMARY ──
+  Logical names resolved : 9
+  Unknown targets        : 0
+  Self-heal events       : 6
+  Variables resolved     : 3
+</pre>
+</body>
+</html>

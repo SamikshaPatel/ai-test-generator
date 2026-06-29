@@ -1,0 +1,55 @@
+As a customer, I want to complete a full purchase journey on the Sauce Demo
+e-commerce site, from logging in through to receiving an order confirmation,
+so that I can verify the end-to-end checkout flow works reliably.
+
+SITE URL: https://www.saucedemo.com
+
+UI ELEMENTS (confirmed selectors):
+  Login page:
+    Username input : #user-name
+    Password input : #password
+    Login button   : #login-button
+
+  Inventory page:
+    Page title     : .title
+    Inventory list : .inventory_list
+    Add to cart    : .btn_primary.btn_inventory
+    Cart badge     : .shopping_cart_badge
+    Cart link      : .shopping_cart_link
+
+  Cart page (/cart.html):
+    Cart item name : .cart_item_label .inventory_item_name
+    Cart quantity  : .cart_quantity
+    Checkout button: .checkout_button  (data-test="checkout")
+
+  Checkout Step 1 (/checkout-step-one.html):
+    First name     : [data-test="firstName"]
+    Last name      : [data-test="lastName"]
+    Zip code       : [data-test="postalCode"]
+    Continue button: [data-test="continue"]
+
+  Checkout Step 2 (/checkout-step-two.html):
+    Item total     : .summary_subtotal_label
+    Tax label      : .summary_tax_label
+    Finish button  : [data-test="finish"]
+
+  Checkout Complete (/checkout-complete.html):
+    Success header : .complete-header
+    Success image  : .pony_express
+
+TEST ACCOUNTS (use exactly these credentials):
+  Valid user : standard_user / secret_sauce
+
+ACCEPTANCE CRITERIA:
+  - Login → Inventory page shows Products title
+  - Add item → Cart badge shows count 1
+  - Navigate to Cart → URL contains cart.html; item is listed
+  - Begin checkout → URL contains checkout-step-one.html
+  - Fill customer info (First=QA, Last=Tester, Zip=12345) → continue to step 2
+  - Checkout step 2 shows item total and tax → finish order
+  - Checkout complete page shows success confirmation header
+
+NOTES:
+  - This is a complete regression journey covering login → browse → add → checkout → confirm
+  - Tests are tagged "smoke" to run in the fast CI gate
+  - Each test starts fresh — login steps are repeated per test for isolation

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Agent Activity — Checkout E2E</title>
+  <style>
+    body { background:#0f1117; color:#e2e8f0; font-family:monospace; padding:24px; margin:0; }
+    h2   { color:#7c3aed; margin-bottom:4px; }
+    .sub { color:#64748b; font-size:0.85em; margin-bottom:20px; }
+    pre  { background:#1e2130; border:1px solid #2d3148; border-radius:8px;
+           padding:20px; white-space:pre-wrap; word-break:break-word;
+           font-size:0.88em; line-height:1.6; }
+  </style>
+</head>
+<body>
+  <h2>Agent Activity Report — Checkout E2E</h2>
+  <p class="sub">Run: RUN-BF7BC58C @ 2026-06-27T14:51:22.326170Z</p>
+  <pre>╔══════════════════════════════════════════════════════╗
+║           AGENT ACTIVITY REPORT                      ║
+╚══════════════════════════════════════════════════════╝
+Run ID    : BF7BC58C
+Timestamp : 2026-06-27T14:51:22.326170Z
+Suite     : Checkout E2E
+
+── LOCATOR RESOLUTIONS (Page Object logical names used) ──
+  add_to_cart                    → .btn_primary
+  cart_badge                     → .shopping_cart_badge
+  cart_link                      → .shopping_cart_link
+  inventory_list                 → .inventory_list
+  login_button                   → #login-button
+  password_input                 → #password
+  username_input                 → #user-name
+
+── UNKNOWN TARGETS (not in PageRegistry — add to Page Object) ──
+  (none — all logical names resolved)
+
+── SELF-HEAL EVENTS (locator drift detected and recovered) ──
+  (none)
+
+── TEST DATA VARIABLES RESOLVED ──
+  ${BASE_URL            } → https://www.saucedemo.com
+  ${LOGIN_PASS          } → ***
+  ${LOGIN_USER          } → standard_user
+
+── PAGE REGISTRY COVERAGE ──
+  Used   : 7/22 selectors (31%)
+  Unused : about, all_items, back_button, close_button, error_message, item_name, item_price, logout, open_button, page_title, product_description, product_name, product_price, reset, sort_dropdown
+
+── AI TEST QUALITY SCORE ──
+╔══════════════════════════════════════╗
+║   AI TEST QUALITY SCORE:  53/100     ║
+╠══════════════════════════════════════╣
+║  Assertion Depth    :  18/25         ║
+║  Negative Coverage  :  25/25         ║
+║  Edge Case Coverage :   0/25         ║
+║  Step Realism       :  10/25         ║
+║  Tier               : FAIR          ║
+╠══════════════════════════════════════╣
+║  Tests: 5 (5 UI / 0 API) | Avg UI st...║
+╚══════════════════════════════════════╝
+
+── SUMMARY ──
+  Logical names resolved : 7
+  Unknown targets        : 0
+  Self-heal events       : 0
+  Variables resolved     : 3
+  AI quality score       : 53/100 (FAIR)
+</pre>
+</body>
+</html>

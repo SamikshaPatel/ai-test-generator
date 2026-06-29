@@ -1,0 +1,38 @@
+As a customer, I want to add products to my shopping cart on the Sauce Demo
+site so that I can track items I intend to purchase.
+
+SITE URL: https://www.saucedemo.com
+
+UI ELEMENTS (confirmed selectors):
+  Login page:
+    Username input : #user-name
+    Password input : #password
+    Login button   : #login-button
+
+  Inventory page:
+    Inventory list : .inventory_list
+    Item name link : .inventory_item_name
+    Add to cart    : .btn_primary.btn_inventory  (data-test="add-to-cart-sauce-labs-backpack")
+    Cart badge     : .shopping_cart_badge
+    Cart link      : .shopping_cart_link
+
+  Product Detail page:
+    Add to cart    : .btn_primary.btn_inventory
+
+  Cart page (/cart.html):
+    Cart quantity  : .cart_quantity
+    Cart item label: .cart_item_label .inventory_item_name
+
+TEST ACCOUNTS (use exactly these credentials):
+  Valid user : standard_user / secret_sauce
+
+ACCEPTANCE CRITERIA:
+  - Clicking "Add to cart" on the inventory page shows a cart badge with count 1
+  - The cart badge is immediately visible after adding an item
+  - Clicking "Add to cart" from the product detail page also increments the badge
+  - Clicking the cart icon navigates to /cart.html
+  - The cart page lists the added item with quantity 1
+
+NOTES:
+  - SauceDemo is a single-session site — cart state resets on logout
+  - The cart badge only appears when items are in the cart (no badge when cart is empty)

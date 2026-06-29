@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Agent Activity — Products Page</title>
+  <style>
+    body { background:#0f1117; color:#e2e8f0; font-family:monospace; padding:24px; margin:0; }
+    h2   { color:#7c3aed; margin-bottom:4px; }
+    .sub { color:#64748b; font-size:0.85em; margin-bottom:20px; }
+    pre  { background:#1e2130; border:1px solid #2d3148; border-radius:8px;
+           padding:20px; white-space:pre-wrap; word-break:break-word;
+           font-size:0.88em; line-height:1.6; }
+  </style>
+</head>
+<body>
+  <h2>Agent Activity Report — Products Page</h2>
+  <p class="sub">Run: RUN-D1033A9F @ 2026-05-12T19:44:52.574438750Z</p>
+  <pre>╔══════════════════════════════════════════════════════╗
+║           AGENT ACTIVITY REPORT                      ║
+╚══════════════════════════════════════════════════════╝
+Run ID    : D1033A9F
+Timestamp : 2026-05-12T19:44:52.574438750Z
+Suite     : Products Page
+
+── LOCATOR RESOLUTIONS (Page Object logical names used) ──
+  add_to_cart                    → .btn_primary
+  all_items                      → #inventory_sidebar_link
+  cart_badge                     → .shopping_cart_badge
+  inventory_list                 → .inventory_list
+  item_name                      → .inventory_item_name1
+  login_button                   → #login-button
+  logout                         → #logout_sidebar_link
+  open_button                    → #react-burger-menu-btn
+  page_title                     → .title
+  password_input                 → #password
+  product_name                   → .inventory_details_name
+  sort_dropdown                  → .product_sort_container
+  username_input                 → #user-name
+
+── UNKNOWN TARGETS (not in PageRegistry — add to Page Object) ──
+  (none — all logical names resolved)
+
+── SELF-HEAL EVENTS (locator drift detected and recovered) ──
+  [TC006] click: .inventory_item_name1
+    → healed with: .inventory_item_name
+
+── TEST DATA VARIABLES RESOLVED ──
+  ${BASE_URL            } → https://www.saucedemo.com
+  ${LOGIN_PASS          } → ***
+  ${LOGIN_USER          } → standard_user
+
+── PAGE REGISTRY COVERAGE ──
+  Used   : 13/22 selectors (59%)
+  Unused : about, back_button, cart_link, close_button, error_message, item_price, product_description, product_price, reset
+
+── SUMMARY ──
+  Logical names resolved : 13
+  Unknown targets        : 0
+  Self-heal events       : 1
+  Variables resolved     : 3
+</pre>
+</body>
+</html>

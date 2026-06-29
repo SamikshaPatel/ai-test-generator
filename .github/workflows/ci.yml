@@ -1,0 +1,293 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# AI Test Generator — GitHub Actions CI
+#
+# Pipeline strategy (smoke-first / fail-fast gate):
+#
+#   ┌─────────────────────────────────────────────────────┐
+#   │  smoke (matrix: chromium/firefox/webkit)            │  ← always on push/PR
+#   │  28/53 tests tagged "smoke" — ~5 min wall-clock     │
+#   └──────────────────────┬──────────────────────────────┘
+#                          │ all browsers green?
+#                          ▼
+#   ┌─────────────────────────────────────────────────────┐
+#   │  full-test (matrix: chromium/firefox/webkit)        │  ← main push + schedule + dispatch
+#   │  All 53 tests — ~15 min wall-clock                  │
+#   └──────────────────────┬──────────────────────────────┘
+#                          │ uploads allure-results-{browser}
+#                          ▼
+#   ┌─────────────────────────────────────────────────────┐
+#   │  report                                             │  ← merges results, generates report
+#   └─────────────────────────────────────────────────────┘
+#                          │ deploys to GitHub Pages (main branch only)
+#
+# Triggers:
+#   • push to any branch  → smoke gate only
+#   • push to main        → smoke gate → full suite → report + Pages deploy
+#   • pull_request        → smoke gate only
+#   • nightly schedule    → full suite directly (smoke skipped) → report
+#   • manual dispatch     → choose smoke / full / all
+#
+# Secrets required (Settings → Secrets → Actions):
+#   ANTHROPIC_API_KEY  — only needed in API mode (story .txt files)
+#   LOGIN_PASS         — test account password (falls back to test-data.properties)
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: AI Test Suite — Multi-Browser CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    - cron: '0 6 * * 1-5'        # weekdays 06:00 UTC — full suite only
+  workflow_dispatch:
+    inputs:
+      run_mode:
+        description: 'Run mode: smoke | full | all'
+        required: false
+        default: 'all'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true        # cancel superseded runs on the same branch
+
+permissions:
+  contents: read
+
+env:
+  JAVA_VERSION: '17'
+  JAVA_DIST: 'temurin'
+
+# ─────────────────────────────────────────────────────────────────────────────
+# JOB 1 — Smoke gate (fast — ~5 min)
+#   Runs on: every push/PR, manual dispatch (smoke or all mode)
+#   Skipped on: nightly schedule, manual full-only
+# ─────────────────────────────────────────────────────────────────────────────
+jobs:
+
+  smoke:
+    name: Smoke / ${{ matrix.browser }}
+    runs-on: ubuntu-22.04   # Playwright 1.44.0 deps (libffi7, libx264-163) not in 24.04
+
+    # Skip on schedule (always run full) or manual full-only dispatch
+    if: |
+      github.event_name != 'schedule' &&
+      !(github.event_name == 'workflow_dispatch' && github.event.inputs.run_mode == 'full')
+
+    strategy:
+      fail-fast: true             # smoke gate: cancel siblings if one browser fails
+      matrix:
+        browser: [chromium, firefox, webkit]
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DIST }}
+          cache: maven
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ matrix.browser }}-${{ hashFiles('pom.xml') }}
+
+      - name: Install Playwright system deps + browser
+        run: |
+          mvn exec:java \
+            -Dexec.mainClass="com.microsoft.playwright.CLI" \
+            -Dexec.args="install --with-deps ${{ matrix.browser }}" \
+            --no-transfer-progress -q
+
+      - name: Run smoke tests — ${{ matrix.browser }}
+        env:
+          BROWSER: ${{ matrix.browser }}
+          HEADLESS: true
+          LOGIN_PASS: ${{ secrets.LOGIN_PASS }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          mvn test \
+            -Dbrowser=${{ matrix.browser }} \
+            -Dheadless=true \
+            -Dsmoke.only=true \
+            -Dtestng.suite.file=src/test/resources/testng-smoke.xml \
+            --no-transfer-progress
+
+      - name: Upload smoke Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-results-${{ matrix.browser }}
+          path: target/allure-results/
+          retention-days: 3
+          if-no-files-found: warn
+
+      - name: Upload logs (on failure only)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-logs-${{ matrix.browser }}
+          path: target/logs/
+          retention-days: 3
+
+# ─────────────────────────────────────────────────────────────────────────────
+# JOB 2 — Full test suite (all 53 tests, ~15 min)
+#   Runs on: main push (after smoke gate), schedule, manual full/all dispatch
+#   Requires: smoke gate passed (unless schedule/manual)
+# ─────────────────────────────────────────────────────────────────────────────
+
+  full-test:
+    name: Full Tests / ${{ matrix.browser }}
+    runs-on: ubuntu-22.04   # Playwright 1.44.0 deps (libffi7, libx264-163) not in 24.04
+
+    # Run after smoke on main push; run directly on schedule or manual full/all
+    needs: [smoke]
+    if: |
+      always() && (
+        (needs.smoke.result == 'success' && github.ref == 'refs/heads/main' && github.event_name == 'push') ||
+        github.event_name == 'schedule' ||
+        (github.event_name == 'workflow_dispatch' && (github.event.inputs.run_mode == 'full' || github.event.inputs.run_mode == 'all'))
+      )
+
+    strategy:
+      fail-fast: false            # don't cancel sibling browsers on one failure
+      matrix:
+        browser: [chromium, firefox, webkit]
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DIST }}
+          cache: maven
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ matrix.browser }}-${{ hashFiles('pom.xml') }}
+
+      - name: Install Playwright system deps + browser
+        run: |
+          mvn exec:java \
+            -Dexec.mainClass="com.microsoft.playwright.CLI" \
+            -Dexec.args="install --with-deps ${{ matrix.browser }}" \
+            --no-transfer-progress -q
+
+      - name: Run full test suite — ${{ matrix.browser }}
+        env:
+          BROWSER: ${{ matrix.browser }}
+          HEADLESS: true
+          LOGIN_PASS: ${{ secrets.LOGIN_PASS }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          mvn test \
+            -Dbrowser=${{ matrix.browser }} \
+            -Dheadless=true \
+            --no-transfer-progress
+
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-${{ matrix.browser }}
+          path: target/allure-results/
+          retention-days: 7
+          if-no-files-found: warn
+
+      - name: Upload agent reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-reports-${{ matrix.browser }}
+          path: target/agent-reports/
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Upload logs (on failure only)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-${{ matrix.browser }}
+          path: target/logs/
+          retention-days: 3
+
+# ─────────────────────────────────────────────────────────────────────────────
+# JOB 3 — Merge results and publish report (full suite runs only)
+# ─────────────────────────────────────────────────────────────────────────────
+
+  report:
+    name: Generate & Publish Report
+    needs: full-test
+    runs-on: ubuntu-latest
+    if: always() && needs.full-test.result != 'skipped'
+
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DIST }}
+          cache: maven
+
+      - name: Download Allure results (all browsers)
+        uses: actions/download-artifact@v4
+        with:
+          pattern: allure-results-*
+          path: downloaded-results/
+          merge-multiple: false
+
+      - name: Merge results from all browsers
+        run: |
+          mkdir -p target/allure-results-merged
+          for dir in downloaded-results/allure-results-*/; do
+            browser=$(basename "$dir" | sed 's/allure-results-//')
+            count=$(find "$dir" -type f | wc -l)
+            echo "Merging $browser: $count files"
+            cp -r "$dir". target/allure-results-merged/ 2>/dev/null || true
+          done
+          echo "Total merged: $(find target/allure-results-merged -type f | wc -l) files"
+
+      - name: Generate Allure HTML report
+        run: |
+          mvn allure:report \
+            -Dallure.results.directory=target/allure-results-merged \
+            --no-transfer-progress -q
+
+      - name: Upload Allure HTML report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: target/site/allure-maven-plugin/
+          retention-days: 30
+
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: target/site/allure-maven-plugin
+          destination_dir: allure-report
+          commit_message: "ci: publish Allure report for ${{ github.sha }}"

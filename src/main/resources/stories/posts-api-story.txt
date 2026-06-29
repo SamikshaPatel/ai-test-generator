@@ -1,0 +1,34 @@
+As a QA engineer, I want to verify the Posts API endpoints on JSONPlaceholder
+so that I can confirm CRUD operations return correct responses and data shapes.
+
+API BASE URL: https://jsonplaceholder.typicode.com
+
+ENDPOINTS TO TEST:
+  GET    /posts              — retrieves all posts (array of 100 objects)
+  GET    /posts/{id}         — retrieves a single post by ID
+  GET    /posts?userId={id}  — filters posts by userId
+  POST   /posts              — creates a new post (returns 201 with generated ID)
+  PUT    /posts/{id}         — replaces a post (returns 200 with updated data)
+  DELETE /posts/{id}         — deletes a post (returns 200 with empty body)
+
+RESPONSE SHAPE (GET /posts/1):
+  {
+    "userId": 1,
+    "id": 1,
+    "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+    "body": "quia et suscipit..."
+  }
+
+ACCEPTANCE CRITERIA:
+  - GET /posts returns 200 with a non-empty array; first item has userId, id, title, body
+  - GET /posts/1 returns 200 with id=1 and non-empty title
+  - GET /posts/9999 returns 404 (resource not found)
+  - GET /posts?userId=1 returns 200 with posts where userId=1
+  - POST /posts with valid body returns 201 with a generated id field
+  - PUT /posts/1 returns 200 with the updated title
+  - DELETE /posts/1 returns 200
+
+NOTES:
+  - JSONPlaceholder is a read-only fake API — mutations are simulated and not persisted
+  - No authentication required — public API
+  - All endpoints return application/json

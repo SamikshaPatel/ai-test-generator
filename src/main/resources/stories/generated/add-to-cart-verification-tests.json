@@ -1,0 +1,109 @@
+{
+  "tests": [
+    {
+      "id": "TC001",
+      "title": "Adding item from inventory page shows cart badge with count 1",
+      "type": "ui",
+      "tags": ["smoke", "cart", "inventory"],
+      "expected": "Clicking Add to Cart on the inventory page makes the cart badge appear showing the count 1",
+      "steps": [
+        { "action": "navigate",        "target": "${BASE_URL}",    "value": "" },
+        { "action": "fill",            "target": "username_input", "value": "${LOGIN_USER}" },
+        { "action": "fill",            "target": "password_input", "value": "${LOGIN_PASS}" },
+        { "action": "click",           "target": "login_button",   "value": "" },
+        { "action": "wait_for",        "target": "inventory_list", "value": "" },
+        { "action": "click",           "target": "add_to_cart",    "value": "" },
+        { "action": "wait_for",        "target": "cart_badge",     "value": "" },
+        { "action": "assert_text",     "target": "cart_badge",     "value": "1" }
+      ]
+    },
+    {
+      "id": "TC002",
+      "title": "Cart badge becomes visible after adding an item",
+      "type": "ui",
+      "tags": ["smoke", "cart", "inventory"],
+      "expected": "The shopping cart badge is visible immediately after clicking Add to Cart on the inventory page",
+      "steps": [
+        { "action": "navigate",        "target": "${BASE_URL}",    "value": "" },
+        { "action": "fill",            "target": "username_input", "value": "${LOGIN_USER}" },
+        { "action": "fill",            "target": "password_input", "value": "${LOGIN_PASS}" },
+        { "action": "click",           "target": "login_button",   "value": "" },
+        { "action": "wait_for",        "target": "inventory_list", "value": "" },
+        { "action": "click",           "target": "add_to_cart",    "value": "" },
+        { "action": "assert_visible",  "target": "cart_badge",     "value": "" }
+      ]
+    },
+    {
+      "id": "TC003",
+      "title": "Add to cart from product detail page shows cart badge",
+      "type": "ui",
+      "tags": ["smoke", "cart", "product-detail"],
+      "expected": "Clicking Add to Cart on the product detail page makes the cart badge appear",
+      "steps": [
+        { "action": "navigate",        "target": "${BASE_URL}",    "value": "" },
+        { "action": "fill",            "target": "username_input", "value": "${LOGIN_USER}" },
+        { "action": "fill",            "target": "password_input", "value": "${LOGIN_PASS}" },
+        { "action": "click",           "target": "login_button",   "value": "" },
+        { "action": "wait_for",        "target": "inventory_list", "value": "" },
+        { "action": "click",           "target": "item_name",      "value": "" },
+        { "action": "wait_for",        "target": "add_to_cart",    "value": "" },
+        { "action": "click",           "target": "add_to_cart",    "value": "" },
+        { "action": "assert_visible",  "target": "cart_badge",     "value": "" }
+      ]
+    },
+    {
+      "id": "TC004",
+      "title": "Cart badge shows count 1 after adding item from product detail page",
+      "type": "ui",
+      "tags": ["regression", "cart", "product-detail"],
+      "expected": "After adding an item from the product detail page the cart badge displays the count 1",
+      "steps": [
+        { "action": "navigate",        "target": "${BASE_URL}",    "value": "" },
+        { "action": "fill",            "target": "username_input", "value": "${LOGIN_USER}" },
+        { "action": "fill",            "target": "password_input", "value": "${LOGIN_PASS}" },
+        { "action": "click",           "target": "login_button",   "value": "" },
+        { "action": "wait_for",        "target": "inventory_list", "value": "" },
+        { "action": "click",           "target": "item_name",      "value": "" },
+        { "action": "wait_for",        "target": "add_to_cart",    "value": "" },
+        { "action": "click",           "target": "add_to_cart",    "value": "" },
+        { "action": "wait_for",        "target": "cart_badge",     "value": "" },
+        { "action": "assert_text",     "target": "cart_badge",     "value": "1" }
+      ]
+    },
+    {
+      "id": "TC005",
+      "title": "Clicking the cart link navigates to the cart page",
+      "type": "ui",
+      "tags": ["smoke", "cart", "navigation"],
+      "expected": "After adding an item clicking the cart icon navigates to the cart page with URL containing cart.html",
+      "steps": [
+        { "action": "navigate",           "target": "${BASE_URL}",    "value": "" },
+        { "action": "fill",               "target": "username_input", "value": "${LOGIN_USER}" },
+        { "action": "fill",               "target": "password_input", "value": "${LOGIN_PASS}" },
+        { "action": "click",              "target": "login_button",   "value": "" },
+        { "action": "wait_for",           "target": "inventory_list", "value": "" },
+        { "action": "click",              "target": "add_to_cart",    "value": "" },
+        { "action": "click",              "target": "cart_link",      "value": "" },
+        { "action": "assert_url_contains","target": "cart.html",      "value": "" }
+      ]
+    },
+    {
+      "id": "TC006",
+      "title": "Cart badge persists after navigating to cart page",
+      "type": "ui",
+      "tags": ["regression", "cart", "navigation"],
+      "expected": "The cart badge count remains visible with count 1 after navigating from inventory to the cart page",
+      "steps": [
+        { "action": "navigate",           "target": "${BASE_URL}",    "value": "" },
+        { "action": "fill",               "target": "username_input", "value": "${LOGIN_USER}" },
+        { "action": "fill",               "target": "password_input", "value": "${LOGIN_PASS}" },
+        { "action": "click",              "target": "login_button",   "value": "" },
+        { "action": "wait_for",           "target": "inventory_list", "value": "" },
+        { "action": "click",              "target": "add_to_cart",    "value": "" },
+        { "action": "click",              "target": "cart_link",      "value": "" },
+        { "action": "assert_url_contains","target": "cart.html",      "value": "" },
+        { "action": "assert_text",        "target": "cart_badge",     "value": "1" }
+      ]
+    }
+  ]
+}

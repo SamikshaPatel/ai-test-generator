@@ -1,0 +1,36 @@
+As a customer, I want to view the detail page of a product on the Sauce Demo
+site so that I can review product information before deciding to purchase.
+
+SITE URL: https://www.saucedemo.com
+
+UI ELEMENTS (confirmed selectors):
+  Login page:
+    Username input : #user-name
+    Password input : #password
+    Login button   : #login-button
+
+  Inventory page:
+    Inventory list : .inventory_list
+    Item name link : .inventory_item_name  (click to go to product detail)
+
+  Product Detail page (/inventory-item.html):
+    Product name   : .inventory_details_name
+    Product desc   : .inventory_details_desc
+    Product price  : .inventory_details_price
+    Add to cart    : .btn_primary.btn_inventory  (data-test="add-to-cart-sauce-labs-backpack")
+    Back button    : .inventory_details_back_btn  (data-test="back-to-products")
+    Cart badge     : .shopping_cart_badge
+
+TEST ACCOUNTS (use exactly these credentials):
+  Valid user : standard_user / secret_sauce
+
+ACCEPTANCE CRITERIA:
+  - Clicking a product name on the inventory page navigates to the detail page
+  - Product detail page URL contains /inventory-item.html
+  - Product name, description, and price are visible on detail page
+  - Clicking "Add to cart" on detail page shows cart badge with count 1
+  - Clicking "Back to products" returns user to /inventory.html
+
+NOTES:
+  - Products are always visible to logged-in users
+  - The first product on the inventory page is "Sauce Labs Backpack"

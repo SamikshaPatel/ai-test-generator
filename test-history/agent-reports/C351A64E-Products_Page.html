@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Agent Activity — Products Page</title>
+  <style>
+    body { background:#0f1117; color:#e2e8f0; font-family:monospace; padding:24px; margin:0; }
+    h2   { color:#7c3aed; margin-bottom:4px; }
+    .sub { color:#64748b; font-size:0.85em; margin-bottom:20px; }
+    pre  { background:#1e2130; border:1px solid #2d3148; border-radius:8px;
+           padding:20px; white-space:pre-wrap; word-break:break-word;
+           font-size:0.88em; line-height:1.6; }
+  </style>
+</head>
+<body>
+  <h2>Agent Activity Report — Products Page</h2>
+  <p class="sub">Run: RUN-C351A64E @ 2026-05-13T13:49:42.040804Z</p>
+  <pre>╔══════════════════════════════════════════════════════╗
+║           AGENT ACTIVITY REPORT                      ║
+╚══════════════════════════════════════════════════════╝
+Run ID    : C351A64E
+Timestamp : 2026-05-13T13:49:42.040804Z
+Suite     : Products Page
+
+── LOCATOR RESOLUTIONS (Page Object logical names used) ──
+  add_to_cart                    → .btn_primary
+  cart_badge                     → .shopping_cart_badge
+  inventory_list                 → .inventory_list
+  login_button                   → #login-button
+  page_title                     → .title
+  password_input                 → #password
+  sort_dropdown                  → .product_sort_container
+  username_input                 → #user-name
+
+── UNKNOWN TARGETS (not in PageRegistry — add to Page Object) ──
+  (none — all logical names resolved)
+
+── SELF-HEAL EVENTS (locator drift detected and recovered) ──
+  (none)
+
+── TEST DATA VARIABLES RESOLVED ──
+  ${BASE_URL            } → https://www.saucedemo.com
+  ${LOGIN_PASS          } → ***
+  ${LOGIN_USER          } → standard_user
+
+── PAGE REGISTRY COVERAGE ──
+  Used   : 8/22 selectors (36%)
+  Unused : about, all_items, back_button, cart_link, close_button, error_message, item_name, item_price, logout, open_button, product_description, product_name, product_price, reset
+
+── SUMMARY ──
+  Logical names resolved : 8
+  Unknown targets        : 0
+  Self-heal events       : 0
+  Variables resolved     : 3
+</pre>
+</body>
+</html>

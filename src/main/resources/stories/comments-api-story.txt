@@ -1,0 +1,32 @@
+As a QA engineer, I want to verify the Comments API endpoints on JSONPlaceholder
+so that I can confirm comment retrieval, filtering by post, and error handling work correctly.
+
+API BASE URL: https://jsonplaceholder.typicode.com
+
+ENDPOINTS TO TEST:
+  GET    /comments              — retrieves all comments (array of 500 objects)
+  GET    /comments/{id}         — retrieves a single comment by ID
+  GET    /comments?postId={id}  — filters comments by postId
+  GET    /posts/{id}/comments   — alternative route for comments on a post
+
+RESPONSE SHAPE (GET /comments/1):
+  {
+    "postId": 1,
+    "id": 1,
+    "name": "id labore ex et quam laborum",
+    "email": "Eliseo@gardner.biz",
+    "body": "laudantium enim quasi est quidem magnam..."
+  }
+
+ACCEPTANCE CRITERIA:
+  - GET /comments returns 200 with a non-empty array
+  - First comment has postId, id, name, email, and body fields
+  - GET /comments/1 returns 200 with id=1 and a valid email field
+  - GET /comments/9999 returns 404 for non-existent comment
+  - GET /comments?postId=1 returns 200 with comments where postId=1
+  - GET /posts/1/comments returns 200 with comments belonging to post 1
+
+NOTES:
+  - JSONPlaceholder is a read-only fake API
+  - No authentication required
+  - email field is always a valid email string (useful for format validation)

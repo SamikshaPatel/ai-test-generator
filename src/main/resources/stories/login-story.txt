@@ -1,0 +1,34 @@
+As a customer, I want to log in to the Sauce Demo e-commerce site
+so that I can browse and add products to my cart.
+
+SITE URL: https://www.saucedemo.com
+
+UI ELEMENTS (confirmed selectors):
+  Login page:
+    Username input : #user-name
+    Password input : #password
+    Login button   : #login-button
+    Error message  : [data-test="error"]
+
+  Inventory page (after login):
+    Page title     : .title
+    Product list   : .inventory_list
+    First product  : .inventory_item:first-child
+    Add to cart    : .btn_primary.btn_inventory
+    Cart icon      : .shopping_cart_link
+    Cart badge     : .shopping_cart_badge
+
+TEST ACCOUNTS (use exactly these credentials):
+  Valid user   : standard_user / secret_sauce
+  Locked user  : locked_out_user / secret_sauce  (should be rejected)
+
+ACCEPTANCE CRITERIA:
+  - Logging in with standard_user / secret_sauce redirects to /inventory.html
+  - The inventory page title shows "Products"
+  - Logging in with locked_out_user shows error message containing "locked out"
+  - Logging in with wrong password shows error message containing "do not match"
+  - Clicking "Add to cart" increments the cart badge to "1"
+
+NOTES:
+  - This is a purpose-built testing demo site — always available
+  - URL after successful login: https://www.saucedemo.com/inventory.html

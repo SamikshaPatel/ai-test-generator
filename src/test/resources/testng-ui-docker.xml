@@ -1,0 +1,43 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!--
+  Docker UI-only suite — only the 4 Playwright UI runners.
+
+  Used by docker-compose browser containers (chromium / firefox / webkit) after
+  the smoke gate passes.  API tests are excluded here and run once in their own
+  dedicated container using testng-api-docker.xml.
+
+  Serial execution (parallel="none", data-provider-thread-count="1") is required
+  for Chromium x86 stability under Rosetta 2 on Apple Silicon.
+-->
+<suite name="AI Test Generator Suite (UI, Docker)" verbose="1" thread-count="1" parallel="none" data-provider-thread-count="1">
+
+    <listeners>
+        <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
+        <listener class-name="com.qa.ai.retry.RetryAnnotationTransformer"/>
+    </listeners>
+
+    <test name="Login Page Tests" preserve-order="true">
+        <classes>
+            <class name="com.qa.ai.runner.AITestRunner_LoginPageTests"/>
+        </classes>
+    </test>
+
+    <test name="Products Page Tests" preserve-order="true">
+        <classes>
+            <class name="com.qa.ai.runner.AITestRunner_ProductsPageTests"/>
+        </classes>
+    </test>
+
+    <test name="Product Detail Page Tests" preserve-order="true">
+        <classes>
+            <class name="com.qa.ai.runner.AITestRunner_ProductDetailTests"/>
+        </classes>
+    </test>
+
+    <test name="Add to Cart Tests" preserve-order="true">
+        <classes>
+            <class name="com.qa.ai.runner.AITestRunner_AddToCartTests"/>
+        </classes>
+    </test>
+
+</suite>

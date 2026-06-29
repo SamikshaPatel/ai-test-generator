@@ -1,0 +1,13 @@
+target/
+.idea/
+*.iml
+*.class
+*.DS_Store
+.git/
+.github/
+test-history/
+*.log
+.env
+*-credentials.properties
+test-data-secrets.properties
+secrets.properties

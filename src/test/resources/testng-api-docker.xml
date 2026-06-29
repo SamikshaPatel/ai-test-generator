@@ -1,0 +1,44 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!--
+  API-only suite — only the 4 RestAssured API runners.
+
+  API tests are browser-agnostic (pure HTTP via RestAssured).  This suite runs
+  once in a dedicated container — results are merged with the 3 browser UI
+  results to produce the final Allure report.
+
+  Parallel execution is safe here: no Playwright/browser involved, no Rosetta
+  emulation concerns.  Running all 4 suites concurrently cuts total API time
+  to ~1/4 of serial.
+-->
+<suite name="AI Test Generator Suite (API)" verbose="1" thread-count="4" parallel="tests" data-provider-thread-count="4">
+
+    <listeners>
+        <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
+        <listener class-name="com.qa.ai.retry.RetryAnnotationTransformer"/>
+    </listeners>
+
+    <test name="User API Tests" preserve-order="true">
+        <classes>
+            <class name="com.qa.ai.runner.AITestRunner_UserApiTests"/>
+        </classes>
+    </test>
+
+    <test name="Posts API Tests" preserve-order="true">
+        <classes>
+            <class name="com.qa.ai.runner.AITestRunner_PostsApiTests"/>
+        </classes>
+    </test>
+
+    <test name="Comments API Tests" preserve-order="true">
+        <classes>
+            <class name="com.qa.ai.runner.AITestRunner_CommentsApiTests"/>
+        </classes>
+    </test>
+
+    <test name="Todos API Tests" preserve-order="true">
+        <classes>
+            <class name="com.qa.ai.runner.AITestRunner_TodosApiTests"/>
+        </classes>
+    </test>
+
+</suite>

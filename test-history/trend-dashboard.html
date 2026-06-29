@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Test Generator — Trend Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+           background: #0f1117; color: #e2e8f0; margin: 0; padding: 20px; }
+    h1   { color: #7c3aed; margin-bottom: 4px; }
+    .sub { color: #64748b; margin-bottom: 30px; font-size: 0.9em; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+    .card { background: #1e2130; border-radius: 12px; padding: 20px;
+            border: 1px solid #2d3148; }
+    .card h3 { margin: 0 0 16px 0; color: #a78bfa; font-size: 0.95em;
+               text-transform: uppercase; letter-spacing: 0.05em; }
+    .card canvas { min-height: 220px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+    th    { background: #2d3148; padding: 10px 12px; text-align: left;
+            color: #a78bfa; font-weight: 600; }
+    td    { padding: 9px 12px; border-bottom: 1px solid #1a1d2e; }
+    tr:hover td { background: #252840; }
+    .pass { color: #4ade80; font-weight: 600; }
+    .fail { color: #f87171; font-weight: 600; }
+    .heal { color: #fbbf24; font-weight: 600; }
+    .stat-row { display: flex; gap: 16px; margin-bottom: 24px; }
+    .stat     { background: #1e2130; border-radius: 10px; padding: 16px 24px;
+                border: 1px solid #2d3148; flex: 1; text-align: center; }
+    .stat .val { font-size: 2em; font-weight: 700; color: #7c3aed; }
+    .stat .lbl { font-size: 0.8em; color: #64748b; margin-top: 4px; }
+    .warn { display:none; border-radius:8px; padding:12px 18px; margin-bottom:20px;
+            font-size:0.9em; font-weight:500; border-left:4px solid; }
+    .warn-yellow { background:#422006; border-color:#fbbf24; color:#fde68a; }
+    .warn-red    { background:#450a0a; border-color:#f87171; color:#fecaca; }
+  </style>
+</head>
+<body>
+  <h1>AI Test Generator — Trend Dashboard</h1>
+  <p class="sub">Local run history · auto-generated after each mvn test · open test-history/trend-dashboard.html in browser</p>
+
+  <div class="stat-row">
+    <div class="stat"><div class="val" id="totalRuns">—</div><div class="lbl">Runs Evaluated (of 50)</div></div>
+    <div class="stat"><div class="val" id="latestPass" style="color:#4ade80">—</div><div class="lbl">Latest Passed</div></div>
+    <div class="stat"><div class="val" id="latestFail" style="color:#f87171">—</div><div class="lbl">Latest Failed</div></div>
+    <div class="stat"><div class="val" id="totalHeals" style="color:#fbbf24">—</div><div class="lbl">Total Self-Heals</div></div>
+    <div class="stat"><div class="val" id="latestCov">—</div><div class="lbl">Latest Coverage %</div></div>
+  </div>
+  <div id="capacityWarn" class="warn"></div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Pass / Fail Trend</h3>
+      <canvas id="passFailChart"></canvas>
+    </div>
+    <div class="card">
+      <h3>Self-Heal Events per Run</h3>
+      <canvas id="healChart"></canvas>
+    </div>
+    <div class="card">
+      <h3>Page Registry Coverage %</h3>
+      <canvas id="coverageChart"></canvas>
+    </div>
+    <div class="card">
+      <h3>AI Test Quality Score (0–100)</h3>
+      <canvas id="qualityChart"></canvas>
+    </div>
+    <div class="card" style="grid-column: 1 / -1">
+      <h3>Run History</h3>
+      <table>
+        <thead><tr>
+          <th>Run ID</th><th>Timestamp</th><th>Suite</th>
+          <th>Passed</th><th>Failed</th><th>Self-Heals</th><th>Coverage</th><th>Quality</th><th>Report</th>
+        </tr></thead>
+        <tbody>
+<tr><td>DFE9A05C</td><td>2026-05-12T16:37:26.116403Z</td><td>Login Page</td><td class="pass">6</td><td class="">0</td><td class="heal">5</td><td>36%</td><td class="">—</td><td><a href="agent-reports/DFE9A05C-Login_Page.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>DFE9A05C</td><td>2026-05-12T16:37:26.116403Z</td><td>Products Page</td><td class="pass">7</td><td class="">0</td><td class="heal">1</td><td>59%</td><td class="">—</td><td><a href="agent-reports/DFE9A05C-Products_Page.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>DFE9A05C</td><td>2026-05-12T16:37:26.116403Z</td><td>Product Detail Page</td><td class="pass">6</td><td class="">0</td><td class="heal">7</td><td>45%</td><td class="">—</td><td><a href="agent-reports/DFE9A05C-Product_Detail_Page.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>DFE9A05C</td><td>2026-05-12T16:37:26.116403Z</td><td>Add to Cart</td><td class="pass">6</td><td class="">0</td><td class="heal">2</td><td>36%</td><td class="">—</td><td><a href="agent-reports/DFE9A05C-Add_to_Cart.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>DFE9A05C</td><td>2026-05-12T16:37:26.116403Z</td><td>User API</td><td class="pass">7</td><td class="">0</td><td class="">0</td><td>100%</td><td class="">—</td><td><a href="agent-reports/DFE9A05C-User_API.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>DFE9A05C</td><td>2026-05-12T16:37:26.116403Z</td><td>Posts API</td><td class="pass">8</td><td class="">0</td><td class="">0</td><td>100%</td><td class="">—</td><td><a href="agent-reports/DFE9A05C-Posts_API.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>DFE9A05C</td><td>2026-05-12T16:37:26.116403Z</td><td>Comments API</td><td class="pass">6</td><td class="">0</td><td class="">0</td><td>100%</td><td class="">—</td><td><a href="agent-reports/DFE9A05C-Comments_API.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>DFE9A05C</td><td>2026-05-12T16:37:26.116403Z</td><td>Todos API</td><td class="pass">7</td><td class="">0</td><td class="">0</td><td>100%</td><td class="">—</td><td><a href="agent-reports/DFE9A05C-Todos_API.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>D1033A9F</td><td>2026-05-12T19:44:52.574438750Z</td><td>Login Page</td><td class="pass">6</td><td class="">0</td><td class="heal">5</td><td>36%</td><td class="">—</td><td><a href="agent-reports/D1033A9F-Login_Page.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>D1033A9F</td><td>2026-05-12T19:44:52.574438750Z</td><td>Products Page</td><td class="pass">7</td><td class="">0</td><td class="heal">1</td><td>59%</td><td class="">—</td><td><a href="agent-reports/D1033A9F-Products_Page.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>D1033A9F</td><td>2026-05-12T19:44:52.574438750Z</td><td>Product Detail Page</td><td class="pass">6</td><td class="">0</td><td class="heal">7</td><td>45%</td><td class="">—</td><td><a href="agent-reports/D1033A9F-Product_Detail_Page.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>D1033A9F</td><td>2026-05-12T19:44:52.574438750Z</td><td>Add to Cart</td><td class="pass">6</td><td class="">0</td><td class="heal">2</td><td>36%</td><td class="">—</td><td><a href="agent-reports/D1033A9F-Add_to_Cart.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>D1033A9F</td><td>2026-05-12T19:44:52.574438750Z</td><td>User API</td><td class="pass">7</td><td class="">0</td><td class="">0</td><td>100%</td><td class="">—</td><td><a href="agent-reports/D1033A9F-User_API.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>D1033A9F</td><td>2026-05-12T19:44:52.574438750Z</td><td>Posts API</td><td class="pass">8</td><td class="">0</td><td class="">0</td><td>100%</td><td class="">—</td><td><a href="agent-reports/D1033A9F-Posts_API.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>D1033A9F</td><td>2026-05-12T19:44:52.574438750Z</td><td>Comments API</td><td class="pass">6</td><td class="">0</td><td class="">0</td><td>100%</td><td class="">—</td><td><a href="agent-reports/D1033A9F-Comments_API.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>D1033A9F</td><td>2026-05-12T19:44:52.574438750Z</td><td>Todos API</td><td class="pass">7</td><td class="">0</td><td class="">0</td><td>100%</td><td class="">—</td><td><a href="agent-reports/D1033A9F-Todos_API.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>989BF955</td><td>2026-05-13T13:31:08.968311Z</td><td>Login Page</td><td class="pass">6</td><td class="">0</td><td class="heal">5</td><td>36%</td><td class="">—</td><td><a href="agent-reports/989BF955-Login_Page.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>989BF955</td><td>2026-05-13T13:31:08.968311Z</td><td>Products Page</td><td class="pass">7</td><td class="">0</td><td class="heal">1</td><td>59%</td><td class="">—</td><td><a href="agent-reports/989BF955-Products_Page.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>989BF955</td><td>2026-05-13T13:31:08.968311Z</td><td>Product Detail Page</td><td class="pass">6</td><td class="">0</td><td class="heal">7</td><td>45%</td><td class="">—</td><td><a href="agent-reports/989BF955-Product_Detail_Page.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>989BF955</td><td>2026-05-13T13:31:08.968311Z</td><td>Add to Cart</td><td class="pass">6</td><td class="">0</td><td class="heal">2</td><td>36%</td><td class="">—</td><td><a href="agent-reports/989BF955-Add_to_Cart.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>989BF955</td><td>2026-05-13T13:31:08.968311Z</td><td>User API</td><td class="pass">7</td><td class="">0</td><td class="">0</td><td>100%</td><td class="">—</td><td><a href="agent-reports/989BF955-User_API.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>989BF955</td><td>2026-05-13T13:31:08.968311Z</td><td>Posts API</td><td class="pass">8</td><td class="">0</td><td class="">0</td><td>100%</td><td class="">—</td><td><a href="agent-reports/989BF955-Posts_API.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>989BF955</td><td>2026-05-13T13:31:08.968311Z</td><td>Comments API</td><td class="pass">6</td><td class="">0</td><td class="">0</td><td>100%</td><td class="">—</td><td><a href="agent-reports/989BF955-Comments_API.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>989BF955</td><td>2026-05-13T13:31:08.968311Z</td><td>Todos API</td><td class="pass">7</td><td class="">0</td><td class="">0</td><td>100%</td><td class="">—</td><td><a href="agent-reports/989BF955-Todos_API.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>C351A64E</td><td>2026-05-13T13:49:42.040804Z</td><td>Login Page</td><td class="pass">3</td><td class="">0</td><td class="">0</td><td>31%</td><td class="">—</td><td><a href="agent-reports/C351A64E-Login_Page.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>C351A64E</td><td>2026-05-13T13:49:42.040804Z</td><td>Products Page</td><td class="pass">3</td><td class="">0</td><td class="">0</td><td>36%</td><td class="">—</td><td><a href="agent-reports/C351A64E-Products_Page.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>C351A64E</td><td>2026-05-13T13:49:42.040804Z</td><td>Product Detail Page</td><td class="pass">5</td><td class="">0</td><td class="heal">6</td><td>40%</td><td class="">—</td><td><a href="agent-reports/C351A64E-Product_Detail_Page.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>C351A64E</td><td>2026-05-13T13:49:42.040804Z</td><td>Add to Cart</td><td class="pass">4</td><td class="">0</td><td class="heal">1</td><td>36%</td><td class="">—</td><td><a href="agent-reports/C351A64E-Add_to_Cart.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>C351A64E</td><td>2026-05-13T13:49:42.040804Z</td><td>User API</td><td class="pass">3</td><td class="">0</td><td class="">0</td><td>100%</td><td class="">—</td><td><a href="agent-reports/C351A64E-User_API.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>C351A64E</td><td>2026-05-13T13:49:42.040804Z</td><td>Posts API</td><td class="pass">3</td><td class="">0</td><td class="">0</td><td>100%</td><td class="">—</td><td><a href="agent-reports/C351A64E-Posts_API.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>C351A64E</td><td>2026-05-13T13:49:42.040804Z</td><td>Comments API</td><td class="pass">3</td><td class="">0</td><td class="">0</td><td>100%</td><td class="">—</td><td><a href="agent-reports/C351A64E-Comments_API.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>C351A64E</td><td>2026-05-13T13:49:42.040804Z</td><td>Todos API</td><td class="pass">3</td><td class="">0</td><td class="">0</td><td>100%</td><td class="">—</td><td><a href="agent-reports/C351A64E-Todos_API.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>BF7BC58C</td><td>2026-06-27T14:51:22.326170Z</td><td>Login Page</td><td class="pass">6</td><td class="">0</td><td class="heal">5</td><td>36%</td><td class="pass">88/100</td><td><a href="agent-reports/BF7BC58C-Login_Page.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>BF7BC58C</td><td>2026-06-27T14:51:22.326170Z</td><td>Products Page</td><td class="pass">7</td><td class="">0</td><td class="heal">1</td><td>59%</td><td class="fail">40/100</td><td><a href="agent-reports/BF7BC58C-Products_Page.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>BF7BC58C</td><td>2026-06-27T14:51:22.326170Z</td><td>Product Detail Page</td><td class="pass">6</td><td class="">0</td><td class="heal">7</td><td>45%</td><td class="fail">36/100</td><td><a href="agent-reports/BF7BC58C-Product_Detail_Page.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>BF7BC58C</td><td>2026-06-27T14:51:22.326170Z</td><td>Add to Cart</td><td class="pass">6</td><td class="">0</td><td class="heal">2</td><td>36%</td><td class="fail">34/100</td><td><a href="agent-reports/BF7BC58C-Add_to_Cart.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>BF7BC58C</td><td>2026-06-27T14:51:22.326170Z</td><td>Checkout E2E</td><td class="pass">5</td><td class="">0</td><td class="">0</td><td>31%</td><td class="heal">53/100</td><td><a href="agent-reports/BF7BC58C-Checkout_E2E.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>BF7BC58C</td><td>2026-06-27T14:51:22.326170Z</td><td>User API</td><td class="pass">7</td><td class="">0</td><td class="">0</td><td>100%</td><td class="pass">86/100</td><td><a href="agent-reports/BF7BC58C-User_API.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>BF7BC58C</td><td>2026-06-27T14:51:22.326170Z</td><td>Posts API</td><td class="pass">8</td><td class="">0</td><td class="">0</td><td>100%</td><td class="pass">87/100</td><td><a href="agent-reports/BF7BC58C-Posts_API.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>BF7BC58C</td><td>2026-06-27T14:51:22.326170Z</td><td>Comments API</td><td class="pass">6</td><td class="">0</td><td class="">0</td><td>100%</td><td class="pass">90/100</td><td><a href="agent-reports/BF7BC58C-Comments_API.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>BF7BC58C</td><td>2026-06-27T14:51:22.326170Z</td><td>Todos API</td><td class="pass">7</td><td class="">0</td><td class="">0</td><td>100%</td><td class="pass">92/100</td><td><a href="agent-reports/BF7BC58C-Todos_API.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>2E5CE9AB</td><td>2026-06-29T16:22:48.040810Z</td><td>Login Page</td><td class="pass">6</td><td class="">0</td><td class="heal">5</td><td>36%</td><td class="pass">88/100</td><td><a href="agent-reports/2E5CE9AB-Login_Page.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>2E5CE9AB</td><td>2026-06-29T16:22:48.040810Z</td><td>Products Page</td><td class="pass">7</td><td class="">0</td><td class="heal">1</td><td>59%</td><td class="fail">40/100</td><td><a href="agent-reports/2E5CE9AB-Products_Page.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>2E5CE9AB</td><td>2026-06-29T16:22:48.040810Z</td><td>Product Detail Page</td><td class="pass">6</td><td class="">0</td><td class="heal">7</td><td>45%</td><td class="fail">36/100</td><td><a href="agent-reports/2E5CE9AB-Product_Detail_Page.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>2E5CE9AB</td><td>2026-06-29T16:22:48.040810Z</td><td>Add to Cart</td><td class="pass">6</td><td class="">0</td><td class="heal">2</td><td>36%</td><td class="fail">34/100</td><td><a href="agent-reports/2E5CE9AB-Add_to_Cart.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>2E5CE9AB</td><td>2026-06-29T16:22:48.040810Z</td><td>Checkout E2E</td><td class="pass">5</td><td class="">0</td><td class="">0</td><td>31%</td><td class="heal">53/100</td><td><a href="agent-reports/2E5CE9AB-Checkout_E2E.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>2E5CE9AB</td><td>2026-06-29T16:22:48.040810Z</td><td>User API</td><td class="pass">7</td><td class="">0</td><td class="">0</td><td>100%</td><td class="pass">86/100</td><td><a href="agent-reports/2E5CE9AB-User_API.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>2E5CE9AB</td><td>2026-06-29T16:22:48.040810Z</td><td>Posts API</td><td class="pass">8</td><td class="">0</td><td class="">0</td><td>100%</td><td class="pass">87/100</td><td><a href="agent-reports/2E5CE9AB-Posts_API.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>2E5CE9AB</td><td>2026-06-29T16:22:48.040810Z</td><td>Comments API</td><td class="pass">6</td><td class="">0</td><td class="">0</td><td>100%</td><td class="pass">90/100</td><td><a href="agent-reports/2E5CE9AB-Comments_API.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+<tr><td>2E5CE9AB</td><td>2026-06-29T16:22:48.040810Z</td><td>Todos API</td><td class="pass">7</td><td class="">0</td><td class="">0</td><td>100%</td><td class="pass">92/100</td><td><a href="agent-reports/2E5CE9AB-Todos_API.html" target="_blank" style="color:#a78bfa;text-decoration:none">&#128196; Report</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const labels    = ["05-12 16:37", "05-12 16:37", "05-12 16:37", "05-12 16:37", "05-12 16:37", "05-12 16:37", "05-12 16:37", "05-12 16:37", "05-12 19:44", "05-12 19:44", "05-12 19:44", "05-12 19:44", "05-12 19:44", "05-12 19:44", "05-12 19:44", "05-12 19:44", "05-13 13:31", "05-13 13:31", "05-13 13:31", "05-13 13:31", "05-13 13:31", "05-13 13:31", "05-13 13:31", "05-13 13:31", "05-13 13:49", "05-13 13:49", "05-13 13:49", "05-13 13:49", "05-13 13:49", "05-13 13:49", "05-13 13:49", "05-13 13:49", "06-27 14:51", "06-27 14:51", "06-27 14:51", "06-27 14:51", "06-27 14:51", "06-27 14:51", "06-27 14:51", "06-27 14:51", "06-27 14:51", "06-29 16:22", "06-29 16:22", "06-29 16:22", "06-29 16:22", "06-29 16:22", "06-29 16:22", "06-29 16:22", "06-29 16:22", "06-29 16:22"];
+    const passed    = [6, 7, 6, 6, 7, 8, 6, 7, 6, 7, 6, 6, 7, 8, 6, 7, 6, 7, 6, 6, 7, 8, 6, 7, 3, 3, 5, 4, 3, 3, 3, 3, 6, 7, 6, 6, 5, 7, 8, 6, 7, 6, 7, 6, 6, 5, 7, 8, 6, 7];
+    const failed    = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    const selfHeals = [5, 1, 7, 2, 0, 0, 0, 0, 5, 1, 7, 2, 0, 0, 0, 0, 5, 1, 7, 2, 0, 0, 0, 0, 0, 0, 6, 1, 0, 0, 0, 0, 5, 1, 7, 2, 0, 0, 0, 0, 0, 5, 1, 7, 2, 0, 0, 0, 0, 0];
+    const coverage  = [36, 59, 45, 36, 100, 100, 100, 100, 36, 59, 45, 36, 100, 100, 100, 100, 36, 59, 45, 36, 100, 100, 100, 100, 31, 36, 40, 36, 100, 100, 100, 100, 36, 59, 45, 36, 31, 100, 100, 100, 100, 36, 59, 45, 36, 31, 100, 100, 100, 100];
+    const quality   = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 88, 40, 36, 34, 53, 86, 87, 90, 92, 88, 40, 36, 34, 53, 86, 87, 90, 92];
+    // ["DFE9A05C", "DFE9A05C", "DFE9A05C", "DFE9A05C", "DFE9A05C", "DFE9A05C", "DFE9A05C", "DFE9A05C", "D1033A9F", "D1033A9F", "D1033A9F", "D1033A9F", "D1033A9F", "D1033A9F", "D1033A9F", "D1033A9F", "989BF955", "989BF955", "989BF955", "989BF955", "989BF955", "989BF955", "989BF955", "989BF955", "C351A64E", "C351A64E", "C351A64E", "C351A64E", "C351A64E", "C351A64E", "C351A64E", "C351A64E", "BF7BC58C", "BF7BC58C", "BF7BC58C", "BF7BC58C", "BF7BC58C", "BF7BC58C", "BF7BC58C", "BF7BC58C", "BF7BC58C", "2E5CE9AB", "2E5CE9AB", "2E5CE9AB", "2E5CE9AB", "2E5CE9AB", "2E5CE9AB", "2E5CE9AB", "2E5CE9AB", "2E5CE9AB"] and ["Login Page", "Products Page", "Product Detail Page", "Add to Cart", "User API", "Posts API", "Comments API", "Todos API", "Login Page", "Products Page", "Product Detail Page", "Add to Cart", "User API", "Posts API", "Comments API", "Todos API", "Login Page", "Products Page", "Product Detail Page", "Add to Cart", "User API", "Posts API", "Comments API", "Todos API", "Login Page", "Products Page", "Product Detail Page", "Add to Cart", "User API", "Posts API", "Comments API", "Todos API", "Login Page", "Products Page", "Product Detail Page", "Add to Cart", "Checkout E2E", "User API", "Posts API", "Comments API", "Todos API", "Login Page", "Products Page", "Product Detail Page", "Add to Cart", "Checkout E2E", "User API", "Posts API", "Comments API", "Todos API"] injected below in stat-card block
+
+    const MAX_RUNS = 50;
+    const runCount = labels.length;
+
+    // Aggregate last run by runId (multiple modules share same runId)
+    const runIds    = ["DFE9A05C", "DFE9A05C", "DFE9A05C", "DFE9A05C", "DFE9A05C", "DFE9A05C", "DFE9A05C", "DFE9A05C", "D1033A9F", "D1033A9F", "D1033A9F", "D1033A9F", "D1033A9F", "D1033A9F", "D1033A9F", "D1033A9F", "989BF955", "989BF955", "989BF955", "989BF955", "989BF955", "989BF955", "989BF955", "989BF955", "C351A64E", "C351A64E", "C351A64E", "C351A64E", "C351A64E", "C351A64E", "C351A64E", "C351A64E", "BF7BC58C", "BF7BC58C", "BF7BC58C", "BF7BC58C", "BF7BC58C", "BF7BC58C", "BF7BC58C", "BF7BC58C", "BF7BC58C", "2E5CE9AB", "2E5CE9AB", "2E5CE9AB", "2E5CE9AB", "2E5CE9AB", "2E5CE9AB", "2E5CE9AB", "2E5CE9AB", "2E5CE9AB"];
+    const suites    = ["Login Page", "Products Page", "Product Detail Page", "Add to Cart", "User API", "Posts API", "Comments API", "Todos API", "Login Page", "Products Page", "Product Detail Page", "Add to Cart", "User API", "Posts API", "Comments API", "Todos API", "Login Page", "Products Page", "Product Detail Page", "Add to Cart", "User API", "Posts API", "Comments API", "Todos API", "Login Page", "Products Page", "Product Detail Page", "Add to Cart", "User API", "Posts API", "Comments API", "Todos API", "Login Page", "Products Page", "Product Detail Page", "Add to Cart", "Checkout E2E", "User API", "Posts API", "Comments API", "Todos API", "Login Page", "Products Page", "Product Detail Page", "Add to Cart", "Checkout E2E", "User API", "Posts API", "Comments API", "Todos API"];
+    const lastRunId = runIds.at(-1);
+    const lastRunIdxs = runIds.reduce((acc,id,i) => { if(id===lastRunId) acc.push(i); return acc; }, []);
+    const lastRunPassed = lastRunIdxs.reduce((s,i) => s + (passed[i]||0), 0);
+    const lastRunFailed = lastRunIdxs.reduce((s,i) => s + (failed[i]||0), 0);
+    const lastRunCov    = Math.round(lastRunIdxs.reduce((s,i) => s + (coverage[i]||0), 0) / lastRunIdxs.length);
+
+    // Stat cards
+    document.getElementById('totalRuns').textContent  = runCount;
+    document.getElementById('latestPass').textContent = lastRunPassed;
+    document.getElementById('latestFail').textContent = lastRunFailed;
+    document.getElementById('totalHeals').textContent = selfHeals.reduce((a,b)=>a+b,0);
+    document.getElementById('latestCov').textContent  = lastRunCov + '%';
+    if (lastRunFailed > 0) document.getElementById('latestFail').style.color = '#f87171';
+
+    // Capacity warning
+    const warn = document.getElementById('capacityWarn');
+    if (runCount >= MAX_RUNS) {
+      warn.className = 'warn warn-red';
+      warn.textContent = '⚠️ Run history is at capacity (' + runCount + ' / ' + MAX_RUNS
+        + '). Oldest entries are being dropped automatically. ACTION REQUIRED: archive or export'
+        + ' test-history/runs.json to retain full trend data.';
+      warn.style.display = 'block';
+    } else if (runCount >= Math.ceil(MAX_RUNS / 2)) {
+      warn.className = 'warn warn-yellow';
+      warn.textContent = '⚠️ ' + runCount + ' of ' + MAX_RUNS
+        + ' run history slots used (50% threshold reached). Management should review archiving'
+        + ' policy before the limit is reached and oldest data begins to drop.';
+      warn.style.display = 'block';
+    }
+
+    const gridColor = '#2d3148';
+    const defaults  = { responsive: true, plugins: { legend: { labels: { color: '#e2e8f0' } } },
+                        scales: { x: { ticks: { color:'#64748b' }, grid: { color: gridColor } },
+                                  y: { ticks: { color:'#64748b' }, grid: { color: gridColor } } } };
+
+    new Chart(document.getElementById('passFailChart'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          { label: 'Passed', data: passed,  backgroundColor: '#4ade8088' },
+          { label: 'Failed', data: failed,  backgroundColor: '#f8717188' }
+        ]
+      },
+      options: { ...defaults, scales: { ...defaults.scales, y: { ...defaults.scales.y, beginAtZero: true } } }
+    });
+
+    new Chart(document.getElementById('healChart'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{ label: 'Self-Heals', data: selfHeals,
+          borderColor: '#fbbf24', backgroundColor: '#fbbf2422',
+          tension: 0.3, fill: true, pointBackgroundColor: '#fbbf24' }]
+      },
+      options: defaults
+    });
+
+    new Chart(document.getElementById('coverageChart'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{ label: 'Coverage %', data: coverage,
+          borderColor: '#7c3aed', backgroundColor: '#7c3aed22',
+          tension: 0.3, fill: true, pointBackgroundColor: '#7c3aed' }]
+      },
+      options: { ...defaults,
+        scales: { ...defaults.scales, y: { ...defaults.scales.y, min: 0, max: 100 } } }
+    });
+
+    new Chart(document.getElementById('qualityChart'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{ label: 'AI Quality Score', data: quality,
+          borderColor: '#34d399', backgroundColor: '#34d39922',
+          tension: 0.3, fill: true, pointBackgroundColor: '#34d399' }]
+      },
+      options: { ...defaults,
+        scales: { ...defaults.scales, y: { ...defaults.scales.y, min: 0, max: 100,
+          title: { display: true, text: 'Score / 100', color: '#64748b' } } } }
+    });
+  </script>
+</body>
+</html>

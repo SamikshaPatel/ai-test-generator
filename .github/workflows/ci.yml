@@ -99,13 +99,25 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ matrix.browser }}-${{ hashFiles('pom.xml') }}
 
-      - name: Install Playwright system deps + browser
+      - name: Remove stale Microsoft apt repos
         run: |
           sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list \
                      /etc/apt/sources.list.d/azure-cli.list
+
+      - name: Install Playwright browser (cache miss)
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: |
           mvn exec:java \
             -Dexec.mainClass="com.microsoft.playwright.CLI" \
             -Dexec.args="install --with-deps ${{ matrix.browser }}" \
+            --no-transfer-progress -q
+
+      - name: Install Playwright system deps only (cache hit)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: |
+          mvn exec:java \
+            -Dexec.mainClass="com.microsoft.playwright.CLI" \
+            -Dexec.args="install-deps ${{ matrix.browser }}" \
             --no-transfer-progress -q
 
       - name: Run smoke tests — ${{ matrix.browser }}
@@ -182,13 +194,25 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ matrix.browser }}-${{ hashFiles('pom.xml') }}
 
-      - name: Install Playwright system deps + browser
+      - name: Remove stale Microsoft apt repos
         run: |
           sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list \
                      /etc/apt/sources.list.d/azure-cli.list
+
+      - name: Install Playwright browser (cache miss)
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: |
           mvn exec:java \
             -Dexec.mainClass="com.microsoft.playwright.CLI" \
             -Dexec.args="install --with-deps ${{ matrix.browser }}" \
+            --no-transfer-progress -q
+
+      - name: Install Playwright system deps only (cache hit)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: |
+          mvn exec:java \
+            -Dexec.mainClass="com.microsoft.playwright.CLI" \
+            -Dexec.args="install-deps ${{ matrix.browser }}" \
             --no-transfer-progress -q
 
       - name: Run full test suite — ${{ matrix.browser }}

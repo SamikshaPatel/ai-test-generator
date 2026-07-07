@@ -28,7 +28,7 @@ This project documents a complete shift from manual, reactive QA to AI-assisted,
 | **AI output quality** | Generated tests accepted uncritically | `TestQualityScorer` evaluates every generation on 4 dimensions (0–100), trend-tracked over time |
 | **Selector failure recovery** | Engineer debugs DOM manually | `SelfHealSuggester` sends live DOM snapshot to Claude, returns repair suggestions as Allure attachment |
 | **Release governance** | Tests pass/fail but no gate enforced | `QualityGateChecker` blocks release if pass rate drops below 80% or flake rate exceeds 20% |
-| **QA process visibility** | Pass/fail count in CI | Trend dashboard: 5 charts (pass/fail, self-heals, coverage, response times, AI quality score) across 50 runs |
+| **QA process visibility** | Pass/fail count in CI | Trend dashboard: 4 charts (pass/fail, self-heals, coverage, AI quality score) across 50 runs |
 | **Secret handling** | Depends on developer discipline | Enforced centrally — `SensitiveDataMasker` scrubs secrets from all reports, HAR files, cURL commands |
 
 ---
@@ -68,7 +68,7 @@ Each feature maps to an engineering or business decision made at the QA Manager 
 | Secret leakage in reports | Depends on developer discipline | Enforced centrally — no secrets ever reach reports |
 | AI generation quality | Unknown — no measurement | Scored 0–100 per run, trended across 50 runs |
 | Failing release detection | Test count only | Pass rate + flake rate gates enforced before deploy |
-| Test run visibility | Pass/fail count only | Per-run agent activity, 5-chart trend dashboard, self-heal count |
+| Test run visibility | Pass/fail count only | Per-run agent activity, 4-chart trend dashboard, self-heal count |
 
 ---
 
@@ -90,12 +90,12 @@ Each feature maps to an engineering or business decision made at the QA Manager 
 | **Test data injection** | `${VAR}` placeholders in steps resolved from `test-data.properties` at runtime |
 | **Smoke-first CI gate** | 32/58 tests tagged `smoke` run on every push/PR (~5 min); full suite only after gate passes |
 | **Agent Activity reporting** | Per-run HTML report: locator resolutions, self-heal events, unknown targets, API calls, quality score, coverage % |
-| **Trend dashboard** | Chart.js HTML dashboard — 5 charts: pass/fail, self-heals, page coverage, avg response time, AI quality score |
+| **Trend dashboard** | Chart.js HTML dashboard — 4 charts: pass/fail, self-heals, page coverage, AI quality score |
 | **Flake retry** | `IAnnotationTransformer` wires `FlakeRetryAnalyzer` globally — retries `TimeoutError` only, never assertion failures |
 | **Docker multi-browser** | Single image, three parallel containers (chromium/firefox/webkit), results merged into one Allure report |
 | **CI/CD** | GitHub Actions (smoke gate + full suite + Pages deploy) and Jenkins (smoke + full + Allure publish) |
 | **Security** | `SensitiveDataMasker` scrubs secrets from all headers, HAR files, cURL commands, cookies, and Allure reports |
-| **Framework self-tests** | `TestCaseValidatorTest` (12 tests) + `SensitiveDataMaskerTest` (15 tests) — the framework validates itself |
+| **Framework self-tests** | `TestCaseValidatorTest` (14 tests) + `SensitiveDataMaskerTest` (17 tests) — the framework validates itself |
 
 ---
 
@@ -111,8 +111,8 @@ Each feature maps to an engineering or business decision made at the QA Manager 
 Intentionally broken selectors auto-recovered at runtime. No test failures, no manual fix needed.
 ![Self-Heal Banner](docs/screenshots/self-heal-banner.png)
 
-### Trend Dashboard — 5 Charts, 50 Runs Tracked
-Built-in Chart.js dashboard tracking pass/fail trends, self-heal frequency, page registry coverage, avg response times, and AI quality score across every run.
+### Trend Dashboard — 4 Charts, 50 Runs Tracked
+Built-in Chart.js dashboard tracking pass/fail trends, self-heal frequency, page registry coverage, and AI quality score across every run.
 ![Trend Dashboard](docs/screenshots/trend-dashboard.png)
 
 ### Agent Activity Report — Locator Resolutions + Masked Secrets
@@ -188,7 +188,7 @@ User Story (.json) ────────────────────�
                               │
                     QualityGateChecker (@AfterTest)
                               │
-                    RunHistoryStore ──► TrendDashboard (5 charts)
+                    RunHistoryStore ──► TrendDashboard (4 charts)
 ```
 
 **Key design decisions:**
@@ -276,7 +276,7 @@ Every test generation (API MODE or FILE MODE) is scored by `TestQualityScorer` o
 
 **Tier labels:** EXCELLENT (≥90) / GOOD (≥70) / FAIR (≥50) / POOR (≥25) / CRITICAL (<25)
 
-Scores are recorded in `AgentActivity`, persisted in `test-history/runs.json`, and charted in the 5th panel of the trend dashboard. This enables:
+Scores are recorded in `AgentActivity`, persisted in `test-history/runs.json`, and charted in the 4th panel of the trend dashboard. This enables:
 - A/B comparison of different prompt strategies
 - Alerting when AI generation quality degrades across runs
 - Evidence-based prompt tuning decisions
@@ -421,7 +421,7 @@ src/
 │   │   ├── QualityGateChecker.java   ← enforces pass rate ≥80%, flake rate ≤20%
 │   │   ├── RunContext.java           ← UUID + timestamp per JVM run
 │   │   ├── RunHistoryStore.java      ← persists to test-history/runs.json (incl. quality score)
-│   │   └── TrendDashboard.java       ← generates 5-chart Chart.js HTML dashboard
+│   │   └── TrendDashboard.java       ← generates 4-chart Chart.js HTML dashboard
 │   ├── scorer/
 │   │   └── TestQualityScorer.java    ← 4-dimension AI output quality scoring (0–100)
 │   └── validator/
@@ -442,8 +442,8 @@ src/
     │   ├── AITestRunner_CommentsApiTests.java
     │   └── AITestRunner_TodosApiTests.java
     └── unit/
-        ├── TestCaseValidatorTest.java      ← 12 tests: valid JSON, disallowed actions, XSS inputs
-        └── SensitiveDataMaskerTest.java    ← 15 tests: key detection, scrubJson, scrubFormEncoded
+        ├── TestCaseValidatorTest.java      ← 14 tests: valid JSON, disallowed actions, XSS inputs
+        └── SensitiveDataMaskerTest.java    ← 17 tests: key detection, scrubJson, scrubFormEncoded
 ```
 
 ---

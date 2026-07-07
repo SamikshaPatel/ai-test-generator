@@ -273,6 +273,7 @@ jobs:
       - name: Generate Allure HTML report
         run: |
           mvn allure:report \
+            -Dallure.clean.skip=true \
             --no-transfer-progress -q
 
       - name: Upload Allure HTML report artifact

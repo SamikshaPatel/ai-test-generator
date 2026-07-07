@@ -101,6 +101,8 @@ jobs:
 
       - name: Install Playwright system deps + browser
         run: |
+          sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list \
+                     /etc/apt/sources.list.d/azure-cli.list
           mvn exec:java \
             -Dexec.mainClass="com.microsoft.playwright.CLI" \
             -Dexec.args="install --with-deps ${{ matrix.browser }}" \
@@ -182,6 +184,8 @@ jobs:
 
       - name: Install Playwright system deps + browser
         run: |
+          sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list \
+                     /etc/apt/sources.list.d/azure-cli.list
           mvn exec:java \
             -Dexec.mainClass="com.microsoft.playwright.CLI" \
             -Dexec.args="install --with-deps ${{ matrix.browser }}" \

@@ -134,6 +134,15 @@ jobs:
             -Dtestng.suite.file=src/test/resources/testng-smoke.xml \
             --no-transfer-progress
 
+      - name: Check quality gate
+        if: always()
+        run: |
+          if [ -f target/quality-gate-failure.txt ]; then
+            echo "❌ Quality gate breached:"
+            cat target/quality-gate-failure.txt
+            exit 1
+          fi
+
       - name: Upload smoke Allure results
         if: always()
         uses: actions/upload-artifact@v4
@@ -226,6 +235,15 @@ jobs:
             -Dbrowser=${{ matrix.browser }} \
             -Dheadless=true \
             --no-transfer-progress
+
+      - name: Check quality gate
+        if: always()
+        run: |
+          if [ -f target/quality-gate-failure.txt ]; then
+            echo "❌ Quality gate breached:"
+            cat target/quality-gate-failure.txt
+            exit 1
+          fi
 
       - name: Upload Allure results
         if: always()

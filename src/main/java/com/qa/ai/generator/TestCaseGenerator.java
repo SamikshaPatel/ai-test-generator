@@ -3,7 +3,7 @@ package com.qa.ai.generator;
 import com.qa.ai.model.TestSuite;
 import com.qa.ai.pages.PageRegistry;
 import com.qa.ai.reporter.AgentActivity;
-import com.qa.ai.scorer.TestQualityScorer;
+import com.qa.ai.scorer.AITestOutput_QualityScorer;
 import com.qa.ai.validator.TestCaseValidator;
 import com.qa.ai.validator.TestCaseValidator.ValidationResult;
 import org.apache.logging.log4j.LogManager;
@@ -71,7 +71,7 @@ public class TestCaseGenerator {
         suite.setRawClaudeJson(rawJson);
 
         // Score AI output quality and record for trend tracking
-        TestQualityScorer.QualityScore quality = TestQualityScorer.score(suite.getTests());
+        AITestOutput_QualityScorer.QualityScore quality = AITestOutput_QualityScorer.score(suite.getTests());
         AgentActivity.get().recordQualityScore(quality);
         log.info("AI Quality Score: {}/100 ({})", quality.total(), quality.tier());
 
@@ -141,7 +141,7 @@ public class TestCaseGenerator {
         suite.setRawClaudeJson(rawJson);
 
         // Score AI output quality and record for trend tracking
-        TestQualityScorer.QualityScore quality = TestQualityScorer.score(suite.getTests());
+        AITestOutput_QualityScorer.QualityScore quality = AITestOutput_QualityScorer.score(suite.getTests());
         AgentActivity.get().recordQualityScore(quality);
         log.info("AI Quality Score: {}/100 ({}) — retryCount={}", quality.total(), quality.tier(), retryCount);
 

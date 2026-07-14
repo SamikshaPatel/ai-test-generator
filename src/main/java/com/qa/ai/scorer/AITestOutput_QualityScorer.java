@@ -9,10 +9,12 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 /**
- * Scores AI-generated test suites for quality — not just syntactic validity.
+ * Scores AI-generated test suites for output quality — not just syntactic validity.
  *
- * A QA Director's question: "Are these tests actually catching bugs, or are they
- * shallow happy-path checks that give a false sense of confidence?"
+ * Runs at GENERATION TIME (before any test executes) on the structure of
+ * Claude's JSON output. Answers: "Did Claude produce well-structured tests?"
+ *
+ * For post-execution runtime effectiveness, see {@link TestEffectivenessScorer}.
  *
  * SCORING DIMENSIONS (each 0–25, total 0–100):
  *
@@ -23,15 +25,15 @@ import java.util.List;
  *
  * Score is attached to Allure and persisted in runs.json for trend tracking.
  */
-public class TestQualityScorer {
+public class AITestOutput_QualityScorer {
 
-    private static final Logger log = LogManager.getLogger(TestQualityScorer.class);
+    private static final Logger log = LogManager.getLogger(AITestOutput_QualityScorer.class);
 
     // Thresholds
     private static final int MIN_REALISTIC_STEPS = 3;
     private static final int MAX_REALISTIC_STEPS = 12;
 
-    private TestQualityScorer() {}
+    private AITestOutput_QualityScorer() {}
 
     /**
      * Scores the full list of generated test cases and returns a 0–100 quality score.
@@ -41,7 +43,7 @@ public class TestQualityScorer {
      */
     public static QualityScore score(List<TestCase> tests) {
         if (tests == null || tests.isEmpty()) {
-            log.warn("TestQualityScorer: no tests to score");
+            log.warn("AITestOutput_QualityScorer: no tests to score");
             return new QualityScore(0, 0, 0, 0, 0, "No tests provided");
         }
 
@@ -52,7 +54,7 @@ public class TestQualityScorer {
 
         int total = assertionDepth + negativeCoverage + edgeCaseCoverage + stepRealism;
 
-        log.info("TestQualityScorer: assertionDepth={} negativeCoverage={} " +
+        log.info("AITestOutput_QualityScorer: assertionDepth={} negativeCoverage={} " +
                  "edgeCaseCoverage={} stepRealism={} TOTAL={}",
                  assertionDepth, negativeCoverage, edgeCaseCoverage, stepRealism, total);
 
@@ -205,13 +207,11 @@ public class TestQualityScorer {
         long uiCount  = tests.stream().filter(tc -> "ui".equals(tc.getType())).count();
         long apiCount = tests.stream().filter(tc -> "api".equals(tc.getType())).count();
 
-        // Avg steps for UI tests
         double avgUiSteps = tests.stream()
             .filter(tc -> "ui".equals(tc.getType()) && tc.getSteps() != null)
             .mapToInt(tc -> tc.getSteps().size())
             .average().orElse(0);
 
-        // Avg assertions for API tests
         double avgApiAssertions = tests.stream()
             .filter(tc -> "api".equals(tc.getType()) && tc.getAssertions() != null)
             .mapToInt(tc -> tc.getAssertions().size())
@@ -246,7 +246,7 @@ public class TestQualityScorer {
         public String toReport() {
             return String.format(
                 "╔══════════════════════════════════════╗\n" +
-                "║   AI TEST QUALITY SCORE: %3d/100     ║\n" +
+                "║  AI OUTPUT QUALITY SCORE: %3d/100    ║\n" +
                 "╠══════════════════════════════════════╣\n" +
                 "║  Assertion Depth    : %3d/25         ║\n" +
                 "║  Negative Coverage  : %3d/25         ║\n" +

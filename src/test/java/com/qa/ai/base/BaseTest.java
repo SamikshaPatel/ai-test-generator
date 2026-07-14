@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qa.ai.executor.PlaywrightExecutor;
 import com.qa.ai.executor.RestAssuredExecutor;
 import com.qa.ai.generator.TestCaseGenerator;
+import com.qa.ai.scorer.TestEffectivenessScorer;
 import com.qa.ai.model.TestCase;
 import com.qa.ai.model.TestSuite;
 import com.qa.ai.pages.PageRegistry;
@@ -131,6 +132,14 @@ public abstract class BaseTest {
 
         int qualityScore = AgentActivity.get().qualityScoreTotal();
 
+        // Score runtime effectiveness — runs after all tests complete
+        TestEffectivenessScorer.EffectivenessScore effectiveness = TestEffectivenessScorer.score(
+                passed, failed, skipped,
+                AgentActivity.get().selfHealCount(),
+                AgentActivity.get().flakeRetryCount(),
+                AgentActivity.get().getUnknownTargets().size());
+        AgentActivity.get().recordEffectivenessScore(effectiveness);
+
         // Persist run summary for trend dashboard (includes quality score)
         RunHistoryStore.record(module, passed, failed, skipped,
                 AgentActivity.get().selfHealCount(),
@@ -162,18 +171,23 @@ public abstract class BaseTest {
         int qScore   = AgentActivity.get().qualityScoreTotal();
         String qTier = AgentActivity.get().getQualityScore() != null
                 ? AgentActivity.get().getQualityScore().tier() : "N/A";
+        int eScore   = AgentActivity.get().effectivenessScoreTotal();
+        String eTier = AgentActivity.get().getEffectivenessScore() != null
+                ? AgentActivity.get().getEffectivenessScore().tier() : "N/A";
         String sep = "═".repeat(58);
         System.out.printf("%n╔%s╗%n", sep);
         System.out.printf("║  %-56s║%n", "AGENT ACTIVITY SUMMARY — " + module);
         System.out.printf("║  %-56s║%n", "Run: " + RunContext.getLabel());
         System.out.printf("╠%s╣%n", sep);
-        System.out.printf("║  ✔ Passed         : %-36d║%n", passed);
-        System.out.printf("║  ✘ Failed         : %-36d║%n", failed);
-        System.out.printf("║  ◌ Skipped        : %-36d║%n", skipped);
-        System.out.printf("║  ⚡ Self-Heals     : %-36d║%n", heals);
-        System.out.printf("║  ⚠ Unknown Targets: %-36d║%n", unknowns);
-        System.out.printf("║  ▣ Coverage       : %-35s║%n", covPct + "%");
-        System.out.printf("║  ★ AI Quality     : %-35s║%n", qScore + "/100 (" + qTier + ")");
+        System.out.printf("║  ✔ Passed            : %-33d║%n", passed);
+        System.out.printf("║  ✘ Failed            : %-33d║%n", failed);
+        System.out.printf("║  ◌ Skipped           : %-33d║%n", skipped);
+        System.out.printf("║  ⚡ Self-Heals        : %-33d║%n", heals);
+        System.out.printf("║  ⚠ Unknown Targets   : %-33d║%n", unknowns);
+        System.out.printf("║  ▣ Coverage          : %-32s║%n", covPct + "%");
+        System.out.printf("╠%s╣%n", sep);
+        System.out.printf("║  ★ AI Output Quality : %-32s║%n", qScore + "/100 (" + qTier + ")");
+        System.out.printf("║  ✦ Test Effectiveness: %-32s║%n", eScore + "/100 (" + eTier + ")");
         System.out.printf("╠%s╣%n", sep);
         System.out.printf("║  Trend dashboard  : test-history/trend-dashboard.html   ║%n");
         System.out.printf("╚%s╝%n%n", sep);

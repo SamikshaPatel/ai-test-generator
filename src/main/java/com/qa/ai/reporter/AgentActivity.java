@@ -1,6 +1,7 @@
 package com.qa.ai.reporter;
 
-import com.qa.ai.scorer.TestQualityScorer;
+import com.qa.ai.scorer.AITestOutput_QualityScorer;
+import com.qa.ai.scorer.TestEffectivenessScorer;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,7 +29,8 @@ public class AgentActivity {
     private final List<SelfHealEvent>                       selfHealEvents     = new CopyOnWriteArrayList<>();
     private final Map<String, String>                       resolvedVariables  = new ConcurrentHashMap<>();
     private final List<ApiCallEvent>                        apiCalls           = new CopyOnWriteArrayList<>();
-    private final AtomicReference<TestQualityScorer.QualityScore> qualityScore = new AtomicReference<>();
+    private final AtomicReference<AITestOutput_QualityScorer.QualityScore> qualityScore       = new AtomicReference<>();
+    private final AtomicReference<TestEffectivenessScorer.EffectivenessScore> effectivenessScore = new AtomicReference<>();
     private final AtomicInteger                             flakeRetries       = new AtomicInteger();
 
     private AgentActivity() {}
@@ -42,6 +44,7 @@ public class AgentActivity {
         resolvedVariables.clear();
         apiCalls.clear();
         qualityScore.set(null);
+        effectivenessScore.set(null);
         flakeRetries.set(0);
     }
 
@@ -80,8 +83,12 @@ public class AgentActivity {
         flakeRetries.incrementAndGet();
     }
 
-    public void recordQualityScore(TestQualityScorer.QualityScore score) {
+    public void recordQualityScore(AITestOutput_QualityScorer.QualityScore score) {
         qualityScore.set(score);
+    }
+
+    public void recordEffectivenessScore(TestEffectivenessScorer.EffectivenessScore score) {
+        effectivenessScore.set(score);
     }
 
     // -------------------------------------------------------------------------
@@ -165,11 +172,18 @@ public class AgentActivity {
             sb.append("\n");
         }
 
-        // --- AI Quality Score ---
-        TestQualityScorer.QualityScore qs = qualityScore.get();
+        // --- AI Output Quality Score ---
+        AITestOutput_QualityScorer.QualityScore qs = qualityScore.get();
         if (qs != null) {
-            sb.append("── AI TEST QUALITY SCORE ──\n");
+            sb.append("── AI OUTPUT QUALITY SCORE (generation time) ──\n");
             sb.append(qs.toReport()).append("\n\n");
+        }
+
+        // --- Test Effectiveness Score ---
+        TestEffectivenessScorer.EffectivenessScore es = effectivenessScore.get();
+        if (es != null) {
+            sb.append("── TEST EFFECTIVENESS SCORE (runtime) ──\n");
+            sb.append(es.toReport()).append("\n\n");
         }
 
         // --- Summary ---
@@ -182,7 +196,11 @@ public class AgentActivity {
             sb.append(String.format("  API calls executed     : %d%n", apiCalls.size()));
         }
         if (qs != null) {
-            sb.append(String.format("  AI quality score       : %d/100 (%s)%n", qs.total(), qs.tier()));
+            sb.append(String.format("  AI output quality      : %d/100 (%s)%n", qs.total(), qs.tier()));
+        }
+        TestEffectivenessScorer.EffectivenessScore eff = effectivenessScore.get();
+        if (eff != null) {
+            sb.append(String.format("  Test effectiveness     : %d/100 (%s)%n", eff.total(), eff.tier()));
         }
 
         return sb.toString();
@@ -318,8 +336,10 @@ public class AgentActivity {
     public int                                selfHealCount()      { return selfHealEvents.size(); }
     public int                                apiCallCount()       { return apiCalls.size(); }
     public int                                flakeRetryCount()    { return flakeRetries.get(); }
-    public TestQualityScorer.QualityScore     getQualityScore()    { return qualityScore.get(); }
-    public int                                qualityScoreTotal()  { TestQualityScorer.QualityScore qs = qualityScore.get(); return qs != null ? qs.total() : 0; }
+    public AITestOutput_QualityScorer.QualityScore         getQualityScore()        { return qualityScore.get(); }
+    public int                                             qualityScoreTotal()      { AITestOutput_QualityScorer.QualityScore qs = qualityScore.get(); return qs != null ? qs.total() : 0; }
+    public TestEffectivenessScorer.EffectivenessScore     getEffectivenessScore()  { return effectivenessScore.get(); }
+    public int                                             effectivenessScoreTotal(){ TestEffectivenessScorer.EffectivenessScore es = effectivenessScore.get(); return es != null ? es.total() : 0; }
 
     // -------------------------------------------------------------------------
     // EVENT MODEL

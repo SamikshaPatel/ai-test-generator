@@ -170,6 +170,9 @@ jobs:
     name: Full Tests / ${{ matrix.browser }}
     runs-on: ubuntu-22.04   # Playwright 1.44.0 deps (libffi7, libx264-163) not in 24.04
 
+    permissions:
+      contents: write         # needed to commit test-history/ back to main
+
     # Run after smoke on main push; run directly on schedule or manual full/all
     needs: [smoke]
     if: |
@@ -270,6 +273,22 @@ jobs:
           name: logs-${{ matrix.browser }}
           path: target/logs/
           retention-days: 3
+
+      # Commit trend history back to main — chromium only to avoid parallel push conflicts.
+      # [skip ci] prevents this commit from triggering another workflow run.
+      - name: Commit updated trend history
+        if: always() && matrix.browser == 'chromium'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+          git add test-history/runs.json \
+                  test-history/trend-dashboard.html \
+                  test-history/agent-reports/ \
+                  test-history/repair-suggestions/ || true
+          git diff --staged --quiet || \
+            git commit -m "chore: update test history from CI run ${{ github.run_number }} [skip ci]"
+          git push origin main
 
 # ─────────────────────────────────────────────────────────────────────────────
 # JOB 3 — Merge results and publish report (full suite runs only)

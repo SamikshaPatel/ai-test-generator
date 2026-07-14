@@ -17,6 +17,12 @@
         <listener class-name="com.qa.ai.retry.RetryAnnotationTransformer"/>
     </listeners>
 
+    <test name="Framework Validation" preserve-order="true">
+        <classes>
+            <class name="com.qa.ai.unit.PageRegistryValidationTest"/>
+        </classes>
+    </test>
+
     <test name="Login Page Tests" preserve-order="true">
         <classes>
             <class name="com.qa.ai.runner.AITestRunner_LoginPageTests"/>

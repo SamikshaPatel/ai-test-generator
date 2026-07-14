@@ -286,23 +286,24 @@ LOGIN_PASS=your_password
 
 ### GitHub Actions
 
-`.github/workflows/ci.yml` — smoke-first pipeline:
+`.github/workflows/ci.yml` — smoke-first, three-job pipeline:
 
-**Job `test` (matrix: chromium/firefox/webkit)**
-- Runs on `push`/`PR` to `main`/`develop`, nightly cron (`0 6 * * 1-5`), and manual dispatch
-- `cancel-in-progress: true` — superseded runs on the same branch are cancelled
-- `fail-fast: false` — one browser failing does not cancel the others
-- Installs Playwright browsers with `--with-deps` (includes system-level dependencies)
-- Passes secrets via `LOGIN_PASS: ${{ secrets.LOGIN_PASS }}`
+**Job `smoke` (matrix: chromium/firefox/webkit)**
+- Runs on every `push`/`PR` and manual dispatch (smoke or all mode). Skipped on nightly schedule.
+- `fail-fast: true` — cancels sibling browsers immediately if one fails (fast gate)
+- Fails explicitly if `target/quality-gate-failure.txt` exists after the run
+
+**Job `full-test` (matrix: chromium/firefox/webkit)**
+- Requires `smoke` passed on `main` push; runs directly on schedule or manual full/all dispatch
+- `fail-fast: false` — one browser failure does not cancel the others
+- `permissions: contents: write` — required to commit trend history back to main
+- Fails explicitly if `target/quality-gate-failure.txt` exists after the run
 - Uploads `allure-results-{browser}` + `agent-reports-{browser}` as artifacts (7 days)
-- Uploads logs only on failure (3 days)
-- Fails explicitly if `target/quality-gate-failure.txt` exists
+- **Chromium only:** after the suite completes, commits `test-history/` (`runs.json`, `trend-dashboard.html`, `agent-reports/`, `repair-suggestions/`) back to `main` with `[skip ci]` in the commit message. This persists the trend dashboard across CI runs without triggering another pipeline run. Firefox and webkit skip this step to avoid parallel push conflicts.
 
-**Job `report`** (runs after `test`, even on failure)
-- Downloads all three `allure-results-*` artifacts
-- Merges into `target/allure-results-merged`
-- Generates Allure HTML report
-- Uploads `allure-report` artifact (30 days)
+**Job `report`** (runs after `full-test`, even on failure)
+- Downloads all three `allure-results-*` artifacts and merges them
+- Generates Allure HTML report; uploads as artifact (30 days)
 - Deploys to GitHub Pages on `main` push (requires Pages enabled in repo settings)
 
 **Secrets required** (Settings → Secrets → Actions):

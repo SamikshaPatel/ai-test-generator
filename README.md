@@ -29,7 +29,7 @@ This project documents a complete shift from manual, reactive QA to AI-assisted,
 | **Test effectiveness** | No signal on whether tests actually worked at runtime | `TestEffectivenessScorer` scores pass rate, selector stability, flake resistance, and selector coverage after every suite run |
 | **Selector failure recovery** | Engineer debugs DOM manually | `SelfHealSuggester` sends live DOM snapshot to Claude, returns repair suggestions as Allure attachment |
 | **Release governance** | Tests pass/fail but no gate enforced | `QualityGateChecker` blocks release if pass rate drops below 80% or flake rate exceeds 20% |
-| **QA process visibility** | Pass/fail count in CI | Trend dashboard: 4 charts (pass/fail, self-heals, coverage, AI quality score) across 50 runs |
+| **QA process visibility** | Pass/fail count in CI | Trend dashboard: 5 charts (pass/fail, self-heals, coverage, response time, AI quality score) across 50 runs — auto-committed to `main` after every CI full run |
 | **Secret handling** | Depends on developer discipline | Enforced centrally — `SensitiveDataMasker` scrubs secrets from all reports, HAR files, cURL commands |
 
 ---
@@ -69,7 +69,7 @@ Each feature maps to an engineering or business decision made at the QA Manager 
 | Secret leakage in reports | Depends on developer discipline | Enforced centrally — no secrets ever reach reports |
 | AI generation quality | Unknown — no measurement | Scored 0–100 per run, trended across 50 runs |
 | Failing release detection | Test count only | Pass rate + flake rate gates enforced before deploy |
-| Test run visibility | Pass/fail count only | Per-run agent activity, 4-chart trend dashboard, self-heal count |
+| Test run visibility | Pass/fail count only | Per-run agent activity, 5-chart trend dashboard, self-heal count |
 
 ---
 
@@ -91,7 +91,7 @@ Each feature maps to an engineering or business decision made at the QA Manager 
 | **Test data injection** | `${VAR}` placeholders in steps resolved from `test-data.properties` at runtime |
 | **Smoke-first CI gate** | 32/58 tests tagged `smoke` run on every push/PR (~5 min); full suite only after gate passes |
 | **Agent Activity reporting** | Per-run HTML report: locator resolutions, self-heal events, unknown targets, API calls, quality score, coverage % |
-| **Trend dashboard** | Chart.js HTML dashboard — 4 charts: pass/fail, self-heals, page coverage, AI quality score |
+| **Trend dashboard** | Chart.js HTML dashboard — 5 charts: pass/fail, self-heals, page coverage, avg response time, AI quality score. Committed back to `main` after every CI full run (chromium job, `[skip ci]`) so trend data survives across pipeline runs. |
 | **Flake retry** | `IAnnotationTransformer` wires `FlakeRetryAnalyzer` globally — retries `TimeoutError` only, never assertion failures |
 | **Docker multi-browser** | Single image, three parallel containers (chromium/firefox/webkit), results merged into one Allure report |
 | **CI/CD** | GitHub Actions (smoke gate + full suite + Pages deploy) and Jenkins (smoke + full + Allure publish) |
@@ -112,8 +112,8 @@ Each feature maps to an engineering or business decision made at the QA Manager 
 Intentionally broken selectors auto-recovered at runtime. No test failures, no manual fix needed.
 ![Self-Heal Banner](docs/screenshots/self-heal-banner.png)
 
-### Trend Dashboard — 4 Charts, 50 Runs Tracked
-Built-in Chart.js dashboard tracking pass/fail trends, self-heal frequency, page registry coverage, and AI quality score across every run.
+### Trend Dashboard — 5 Charts, 50 Runs Tracked
+Built-in Chart.js dashboard tracking pass/fail trends, self-heal frequency, page registry coverage, avg response time, and AI quality score across every run. Automatically committed back to `main` after each CI full run.
 ![Trend Dashboard](docs/screenshots/trend-dashboard.png)
 
 ### Agent Activity Report — Locator Resolutions + Masked Secrets
@@ -221,6 +221,7 @@ push / PR to any branch
                  ▼
   ┌─────────────────────────────────┐
   │  Quality Gate Check             │  pass rate ≥80%, flake rate ≤20%
+  │  Commit Trend History (main)    │  chromium job commits test-history/ back to main [skip ci]
   │  Merge + Allure Report          │  merged across 3 browsers
   │  Deploy to GitHub Pages (main)  │
   └─────────────────────────────────┘
@@ -385,6 +386,10 @@ test-history/               ← committed to git, survives mvn clean
   trend-dashboard.html      ← Chart.js dashboard, open in browser — no server needed
   agent-reports/            ← persistent HTML reports linked from dashboard
   repair-suggestions/       ← Claude's selector repair suggestions; cached to avoid redundant API calls
+
+# In CI (GitHub Actions): the chromium full-test job commits the entire test-history/ directory
+# back to main after every run with [skip ci]. To see the latest trend dashboard locally:
+#   git pull && open test-history/trend-dashboard.html
 ```
 
 ---

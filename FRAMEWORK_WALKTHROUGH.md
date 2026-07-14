@@ -44,7 +44,7 @@ When a selector fails: (1) step-level `fallback_targets` in the JSON are tried, 
 | Flaky tests | `FlakeRetryAnalyzer` retries only on `TimeoutError` — not assertion failures |
 | Selector drift | Two-level self-healing + Claude-assisted repair suggestions cached in `test-history/` |
 | CI enforcement | Smoke gate (34 tests, 3 browsers, ~5 min) blocks full suite on failure; quality gate file check on every job |
-| Trend visibility | `RunHistoryStore` + `TrendDashboard` persist pass/fail, self-heals, quality scores across runs in Chart.js dashboard |
+| Trend visibility | `RunHistoryStore` + `TrendDashboard` persist pass/fail, self-heals, quality scores across runs in a 5-chart Chart.js dashboard. The chromium CI job commits `test-history/` back to `main` after every full run (`[skip ci]`) — trend data survives across pipeline runs and is always in the repo |
 
 ---
 

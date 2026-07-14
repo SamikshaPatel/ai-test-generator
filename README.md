@@ -25,7 +25,8 @@ This project documents a complete shift from manual, reactive QA to AI-assisted,
 | **CI feedback** | Full suite on every push (~15 min wait) | Smoke gate (32/58 tests, ~5 min) on every push; full suite only when needed |
 | **API confidence** | Status code checks only | JSON Schema contract validation + SLA assertions on every API suite |
 | **Accessibility** | Separate audit tool, run quarterly | Inline `assert_accessible` step in every UI suite, fails the test on violation |
-| **AI output quality** | Generated tests accepted uncritically | `TestQualityScorer` evaluates every generation on 4 dimensions (0–100), trend-tracked over time |
+| **AI output quality** | Generated tests accepted uncritically | `AITestOutput_QualityScorer` evaluates every generation on 4 dimensions (0–100), trend-tracked over time |
+| **Test effectiveness** | No signal on whether tests actually worked at runtime | `TestEffectivenessScorer` scores pass rate, selector stability, flake resistance, and selector coverage after every suite run |
 | **Selector failure recovery** | Engineer debugs DOM manually | `SelfHealSuggester` sends live DOM snapshot to Claude, returns repair suggestions as Allure attachment |
 | **Release governance** | Tests pass/fail but no gate enforced | `QualityGateChecker` blocks release if pass rate drops below 80% or flake rate exceeds 20% |
 | **QA process visibility** | Pass/fail count in CI | Trend dashboard: 4 charts (pass/fail, self-heals, coverage, AI quality score) across 50 runs |
@@ -80,7 +81,7 @@ Each feature maps to an engineering or business decision made at the QA Manager 
 | **Hallucination guardrails** | 3-layer defence: system prompt allow-lists → JSON schema validator → retry with error context |
 | **Self-healing selectors** | `PlaywrightExecutor` falls back through step-level + PageRegistry fallback chains on `TimeoutError` |
 | **Agentic test repair** | `SelfHealSuggester` sends live DOM snapshot to Claude when all fallbacks fail — returns repair suggestions as Allure attachment + `.json` artifact |
-| **AI output quality scoring** | `TestQualityScorer` scores every AI generation on assertion depth, negative coverage, edge case coverage, and step realism (0–100, tier-labelled) |
+| **AI output quality scoring** | `AITestOutput_QualityScorer` scores every AI generation on assertion depth, negative coverage, edge case coverage, and step realism (0–100, tier-labelled) |
 | **Quality gate enforcement** | `QualityGateChecker` in `@AfterTest` enforces pass rate ≥80% and flake rate ≤20% — writes `quality-gate-failure.txt` and throws on violation |
 | **JSON Schema contract validation** | `schema_file` assertion type validates API response bodies against `schemas/user.schema.json` / `post.schema.json` — catches shape regressions |
 | **Response time SLA assertions** | `response_time_ms` assertion type asserts response is under threshold (e.g. 3000ms) — fails the test if SLA is breached |
@@ -171,7 +172,7 @@ User Story (.txt)
        │                               TestCaseValidator
        │                               (schema + allow-lists + retry)
        │                                      │
-       │                               TestQualityScorer ──► AgentActivity
+       │                               AITestOutput_QualityScorer ──► AgentActivity
        │  [FILE MODE — default, no key needed]
        │
 User Story (.json) ──────────────────────────┘
@@ -265,7 +266,7 @@ Intentionally wrong selectors are set in `LoginPage.java` and `InventoryPage.jav
 
 ## AI Output Quality Scoring
 
-Every test generation (API MODE or FILE MODE) is scored by `TestQualityScorer` on 4 dimensions:
+Every test generation (API MODE or FILE MODE) is scored by `AITestOutput_QualityScorer` on 4 dimensions:
 
 | Dimension | What it measures | Score contribution |
 |---|---|---|
@@ -422,7 +423,8 @@ src/
 │   │   ├── RunHistoryStore.java      ← persists to test-history/runs.json (incl. quality score)
 │   │   └── TrendDashboard.java       ← generates 4-chart Chart.js HTML dashboard
 │   ├── scorer/
-│   │   └── TestQualityScorer.java    ← 4-dimension AI output quality scoring (0–100)
+│   │   ├── AITestOutput_QualityScorer.java    ← scores Claude's JSON output at generation time (0–100)
+│   │   └── TestEffectivenessScorer.java       ← scores runtime performance in @AfterTest (0–100)
 │   └── validator/
 │       └── TestCaseValidator.java    ← schema + allow-list validation
 └── test/java/com/qa/ai/
@@ -490,7 +492,7 @@ export ANTHROPIC_API_KEY=sk-ant-...
 mvn test
 ```
 
-Claude generates fresh test cases on each run. The validator rejects non-conforming JSON and retries once with the error context fed back to Claude. The generated suite is scored by `TestQualityScorer` and the score is recorded to the trend dashboard.
+Claude generates fresh test cases on each run. The validator rejects non-conforming JSON and retries once with the error context fed back to Claude. The generated suite is scored by `AITestOutput_QualityScorer` and the score is recorded to the trend dashboard.
 
 Available story files in `src/main/resources/stories/`:
 - `login-story.txt`, `checkout-e2e-story.txt`, `product-detail-story.txt`, `add-to-cart-story.txt`

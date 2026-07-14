@@ -38,7 +38,8 @@ mvn allure:serve
 User Story (.txt) → TestCaseGenerator → ClaudeService (Anthropic SDK)
     → raw JSON → TestCaseValidator (schema + allow-list)
     → invalid? retry once with error context → TestSuite
-    → TestQualityScorer → AgentActivity (score recorded)
+    → AITestOutput_QualityScorer → AgentActivity (AI output score recorded)
+    → BaseTest @AfterTest → TestEffectivenessScorer → AgentActivity (runtime effectiveness score recorded)
     → BaseTest (@DataProvider) → PlaywrightExecutor (UI) / RestAssuredExecutor (API)
     → QualityGateChecker (@AfterTest) → RunHistoryStore → TrendDashboard
     → AllureReporter
@@ -52,7 +53,8 @@ User Story (.txt) → TestCaseGenerator → ClaudeService (Anthropic SDK)
 | `PromptTemplates` | All system/user/retry prompts. Edit here for prompt tuning. Enforces `${VAR}` for sensitive data; hardcoded secrets are forbidden in generated JSON. |
 | `TestCaseValidator` | Multi-layer validation: syntax → required fields → type-specific → allow-lists. |
 | `TestCaseGenerator` | Orchestrates: read story → generate → validate → retry once → score → enrich `TestSuite`. |
-| `TestQualityScorer` | Scores AI-generated test suites on 4 dimensions (assertion depth, negative coverage, edge case coverage, step realism). Returns 0–100 score with tier label (EXCELLENT/GOOD/FAIR/POOR/CRITICAL). |
+| `AITestOutput_QualityScorer` | Scores Claude's JSON output at generation time on 4 dimensions (assertion depth, negative coverage, edge case coverage, step realism). Returns 0–100 score with tier label (EXCELLENT/GOOD/FAIR/POOR/CRITICAL). |
+| `TestEffectivenessScorer` | Scores actual runtime performance in `@AfterTest` on 4 dimensions (pass rate, selector stability, flake resistance, selector coverage). Answers "did these tests work?" rather than "did Claude produce good structure?". |
 | `QualityGateChecker` | Runs in `@AfterTest` — enforces pass rate ≥80% and flake rate ≤20% per suite. Writes `target/quality-gate-failure.txt` and throws `QualityGateException` on violation. |
 | `SelfHealSuggester` | Triggered when all fallback selectors are exhausted. Sends live DOM snapshot to Claude and returns selector repair suggestions as Allure attachment + `test-history/repair-suggestions/{testId}.json`. Cached — if a suggestion file already exists for a testId, Claude is not called again. Human-in-the-loop — suggestions are not auto-applied. |
 | `PlaywrightExecutor` | Executes UI steps at viewport 1280×800. Self-healing (step fallbacks + PageRegistry). `assert_accessible` runs an in-browser JS audit (title, landmarks, alt text, form labels). On failure: viewport screenshot, DOM snapshot, browser console log, cookies (values masked), HAR (secrets scrubbed), diagnostics report. Per-step screenshots always attached. |

@@ -353,7 +353,7 @@ mvn test
   └── BaseTest.warmUp() (@BeforeTest)
         └── TestCaseGenerator.generateFromJson()  ← reads your saved .json
               └── TestCaseValidator               ← validates schema + allow-lists
-                    └── TestQualityScorer         ← scores AI output quality (0–100)
+                    └── AITestOutput_QualityScorer         ← scores Claude's JSON output quality (0–100)
 
   └── @DataProvider feeds each test case to @Test in parallel
 
@@ -372,9 +372,10 @@ mvn test
           └── Attaches request, response, cURL command to Allure
 
   └── BaseTest.reportAgentActivity() (@AfterTest)
-        ├── QualityGateChecker  ← fails suite if pass rate < 80% or flake rate > 20%
-        ├── RunHistoryStore     ← appends run summary to test-history/runs.json
-        └── TrendDashboard      ← regenerates test-history/trend-dashboard.html
+        ├── TestEffectivenessScorer  ← scores runtime performance (pass rate, stability, flake resistance, coverage)
+        ├── QualityGateChecker       ← fails suite if pass rate < 80% or flake rate > 20%
+        ├── RunHistoryStore          ← appends run summary to test-history/runs.json
+        └── TrendDashboard           ← regenerates test-history/trend-dashboard.html
 ```
 
 ---

@@ -1,6 +1,7 @@
 package com.qa.ai.retry;
 
 import com.qa.ai.config.ConfigManager;
+import com.qa.ai.reporter.AgentActivity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.IRetryAnalyzer;
@@ -33,6 +34,7 @@ public class FlakeRetryAnalyzer implements IRetryAnalyzer {
         boolean isTimeout = isTimeoutError(cause);
         if (isTimeout) {
             retryCount++;
+            AgentActivity.get().recordFlakeRetry();
             log.warn("Flaky test — retrying ({}/{}) '{}': {}",
                     retryCount, MAX_RETRIES,
                     result.getName(),

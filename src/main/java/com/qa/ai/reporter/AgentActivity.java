@@ -5,6 +5,7 @@ import com.qa.ai.scorer.TestQualityScorer;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -28,6 +29,7 @@ public class AgentActivity {
     private final Map<String, String>                       resolvedVariables  = new ConcurrentHashMap<>();
     private final List<ApiCallEvent>                        apiCalls           = new CopyOnWriteArrayList<>();
     private final AtomicReference<TestQualityScorer.QualityScore> qualityScore = new AtomicReference<>();
+    private final AtomicInteger                             flakeRetries       = new AtomicInteger();
 
     private AgentActivity() {}
 
@@ -40,6 +42,7 @@ public class AgentActivity {
         resolvedVariables.clear();
         apiCalls.clear();
         qualityScore.set(null);
+        flakeRetries.set(0);
     }
 
     // -------------------------------------------------------------------------
@@ -71,6 +74,10 @@ public class AgentActivity {
 
     public void recordApiCall(String testId, String method, String url, int statusCode) {
         apiCalls.add(new ApiCallEvent(testId, method, url, statusCode));
+    }
+
+    public void recordFlakeRetry() {
+        flakeRetries.incrementAndGet();
     }
 
     public void recordQualityScore(TestQualityScorer.QualityScore score) {
@@ -310,6 +317,7 @@ public class AgentActivity {
     public List<ApiCallEvent>                 getApiCalls()        { return Collections.unmodifiableList(apiCalls); }
     public int                                selfHealCount()      { return selfHealEvents.size(); }
     public int                                apiCallCount()       { return apiCalls.size(); }
+    public int                                flakeRetryCount()    { return flakeRetries.get(); }
     public TestQualityScorer.QualityScore     getQualityScore()    { return qualityScore.get(); }
     public int                                qualityScoreTotal()  { TestQualityScorer.QualityScore qs = qualityScore.get(); return qs != null ? qs.total() : 0; }
 

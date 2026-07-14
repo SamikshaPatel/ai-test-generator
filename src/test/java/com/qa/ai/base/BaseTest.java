@@ -139,7 +139,7 @@ public abstract class BaseTest {
 
         // Evaluate quality gates — fails with QualityGateException if thresholds not met
         try {
-            QualityGateChecker.evaluate(module, passed, failed, skipped, 0);
+            QualityGateChecker.evaluate(module, passed, failed, skipped, AgentActivity.get().flakeRetryCount());
         } catch (QualityGateChecker.QualityGateException gateEx) {
             log.error("Quality gate blocked suite: {} — {}", module, gateEx.getMessage());
             // Re-throw so TestNG marks the @AfterTest as failed (visible in Allure)

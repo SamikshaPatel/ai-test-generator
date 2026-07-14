@@ -19,7 +19,7 @@ import java.nio.file.Paths;
  *   2. Sends DOM + failed selector to Claude
  *   3. Claude suggests alternative selectors (ranked by confidence)
  *   4. Suggestions are attached to Allure as "AI Repair Suggestion"
- *   5. Saved to target/repair-suggestions/{testId}.json for CI triage
+ *   5. Saved to test-history/repair-suggestions/{testId}.json (survives mvn clean)
  *
  * Does NOT auto-apply suggestions — a QA engineer reviews and commits updates
  * to the Page Object or fallback_targets in the JSON story.
@@ -44,6 +44,28 @@ public class SelfHealSuggester {
      * @param domSnapshot     the full HTML DOM at the point of failure
      */
     public static void suggest(String testId, String failedSelector, String action, String domSnapshot) {
+        Path suggestionFile = Paths.get("test-history", "repair-suggestions", testId + ".json");
+
+        // If a suggestion for this testId already exists from a previous run, reuse it
+        // and skip the Claude API call entirely — no point asking Claude the same question twice.
+        if (Files.exists(suggestionFile)) {
+            log.info("SelfHealSuggester: cached suggestion found for [{}] — skipping Claude API call", testId);
+            try {
+                String cached = Files.readString(suggestionFile, StandardCharsets.UTF_8);
+                String attachmentContent = buildSuggestionReport(testId, failedSelector, action,
+                        extractSuggestions(cached)) + "\n\n[SOURCE: cached from previous run — " + suggestionFile + "]";
+                Allure.addAttachment(
+                    "AI Repair Suggestion (cached) — " + testId,
+                    "text/plain",
+                    new ByteArrayInputStream(attachmentContent.getBytes(StandardCharsets.UTF_8)),
+                    ".txt"
+                );
+            } catch (Exception e) {
+                log.warn("SelfHealSuggester: could not read cached suggestion — {}", e.getMessage());
+            }
+            return;
+        }
+
         String apiKey = System.getenv("ANTHROPIC_API_KEY");
         if (apiKey == null || apiKey.isBlank()) {
             log.debug("SelfHealSuggester: ANTHROPIC_API_KEY not set — skipping repair suggestion");
@@ -72,7 +94,7 @@ public class SelfHealSuggester {
                 ".txt"
             );
 
-            // Save to target/repair-suggestions/ for CI triage
+            // Save to test-history/repair-suggestions/ — persists across mvn clean, drives cache hits
             saveSuggestionFile(testId, failedSelector, suggestions);
 
             log.info("SelfHealSuggester: repair suggestions attached for [{}]", testId);
@@ -146,9 +168,16 @@ public class SelfHealSuggester {
         );
     }
 
+    /** Extracts the "suggestions" value from a saved {testId, failedSelector, suggestions} JSON file. */
+    private static String extractSuggestions(String cachedJson) {
+        int idx = cachedJson.indexOf("\"suggestions\":");
+        if (idx == -1) return cachedJson;
+        return cachedJson.substring(idx + "\"suggestions\":".length()).trim();
+    }
+
     private static void saveSuggestionFile(String testId, String failedSelector, String suggestions) {
         try {
-            Path dir = Paths.get("target", "repair-suggestions");
+            Path dir = Paths.get("test-history", "repair-suggestions");
             Files.createDirectories(dir);
             String content = String.format(
                 "{\"testId\":\"%s\",\"failedSelector\":\"%s\",\"suggestions\":%s}",

@@ -255,7 +255,7 @@ All fallbacks exhausted for: .checkout-btn
 → DOM snapshot captured (6000 chars)
 → Claude API called: "suggest replacement selectors for .checkout-btn"
 → AI Repair Suggestion attached to Allure result
-→ Suggestions saved to: target/repair-suggestions/{testId}.json
+→ Suggestions saved to: test-history/repair-suggestions/{testId}.json (survives mvn clean; cached on next run)
 → Human reviews suggestions before applying — no blind auto-patch
 ```
 
@@ -377,14 +377,13 @@ target/
   agent-reports/
     {runId}-{Module}.html   ← styled HTML agent activity report (per suite)
     {runId}-{Module}.json   ← machine-readable (CI parseable)
-  repair-suggestions/
-    {testId}.json           ← Claude's selector repair suggestions (when triggered)
   site/allure-maven-plugin/ ← generated Allure HTML report
 
 test-history/               ← committed to git, survives mvn clean
   runs.json                 ← cumulative run history (last 50 entries, includes quality score)
   trend-dashboard.html      ← Chart.js dashboard, open in browser — no server needed
   agent-reports/            ← persistent HTML reports linked from dashboard
+  repair-suggestions/       ← Claude's selector repair suggestions; cached to avoid redundant API calls
 ```
 
 ---

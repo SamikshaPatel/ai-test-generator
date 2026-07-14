@@ -13,7 +13,10 @@ and requires no API key or credits.
 ```
 You write a user story (.txt)
         ↓
-Paste system prompt + story into claude.ai
+Paste system prompt + story into claude.ai 
+[or say 
+# use the following command in CLI: read PromptTemplates.java >  SystemPrompt method>
+# and then read <productsPage-story.txt> (your user story)> create the tests now in json format as per system prompt.]
         ↓
 Claude returns a JSON test suite
         ↓

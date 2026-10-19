@@ -16,6 +16,3 @@ Docs_Screenshots/
 test-data-secrets.properties
 *-credentials.properties
 secrets.properties
-
-# Local interview prep — not for public repo
-INTERVIEW_PREP.md

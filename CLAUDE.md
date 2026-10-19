@@ -64,7 +64,7 @@ User Story (.txt) → TestCaseGenerator → ClaudeService (Anthropic SDK)
 | `AgentActivity` | Thread-safe singleton collecting locator resolutions, self-heals, variable substitutions (sensitive values masked), API calls, and quality score during a run. Reset per `@BeforeTest`. |
 | `RunContext` | JVM-scoped UUID + timestamp stamped on all artifacts for a run. |
 | `RunHistoryStore` | Appends run summaries (including quality score) to `test-history/runs.json` (outside `target/`, survives `mvn clean`). Keeps last 50 entries (`MAX_RUNS`). |
-| `TrendDashboard` | Generates `test-history/trend-dashboard.html` — 5 Chart.js charts (pass/fail, self-heals, coverage, avg response time, AI quality score) + run history table. |
+| `TrendDashboard` | Generates `test-history/trend-dashboard.html` — 4 Chart.js charts (pass/fail, self-heals, coverage, AI quality score) + run history table. |
 | `ConfigManager` | Singleton reading `config.properties`. Resolution order: system property (`-D`) → env var → `config.properties` → default. |
 | `TestDataResolver` | Resolves `${VAR}` placeholders. Checks `System.getenv(key)` first, then `test-data.properties`. Sensitive key values logged/recorded as `[MASKED]` — never in reports. |
 | `PageRegistry` | Central fallback-selector lookup built from all Page Object classes. |
@@ -231,7 +231,7 @@ Claude model: `claude-sonnet-4-6` (configured in `ClaudeService`).
 | `target/site/allure-maven-plugin/` | Generated Allure HTML report | No |
 | `test-history/runs.json` | Cumulative run summaries incl. quality score (last 50), drives trend charts | Yes |
 | `test-history/agent-reports/` | Persistent HTML agent reports linked from trend dashboard | Yes |
-| `test-history/trend-dashboard.html` | 5-chart Chart.js dashboard — open in browser, no server needed | Yes |
+| `test-history/trend-dashboard.html` | 4-chart Chart.js dashboard — open in browser, no server needed | Yes |
 
 ## Logs
 

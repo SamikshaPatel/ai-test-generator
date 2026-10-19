@@ -10,6 +10,8 @@
 
 A Java-based AI-augmented test automation framework that reads a plain-English user story, calls the Claude API to generate structured test cases, validates them against a 3-layer hallucination guardrail, then executes them across Playwright (UI) and RestAssured (API) — with self-healing selectors, JSON Schema contract validation, response time SLA assertions, accessibility auditing, AI output quality scoring, agentic repair suggestions, a trend dashboard, and full CI/CD pipelines (GitHub Actions + Jenkins + Docker).
 
+**Reference implementation** — runs against public demo apps ([SauceDemo](https://www.saucedemo.com) for UI, [JSONPlaceholder](https://jsonplaceholder.typicode.com) for API) so anyone can clone and run it end to end. The same patterns apply to any web app or REST service.
+
 **No API key needed to run** — pre-generated JSON stories are included so you can execute all 58 tests immediately after cloning.
 
 ---
@@ -21,15 +23,15 @@ This project documents a complete shift from manual, reactive QA to AI-assisted,
 | Dimension | Before | After (this framework) |
 |---|---|---|
 | **Test authoring** | Engineers hand-write test cases per sprint | Claude generates structured test cases from plain-English stories — non-engineers can contribute |
-| **Selector maintenance** | Manual investigation when UI changes break tests | 2-level self-healing (step fallbacks + PageRegistry) recovers at runtime, zero manual fix needed |
-| **CI feedback** | Full suite on every push (~15 min wait) | Smoke gate (32/58 tests, ~5 min) on every push; full suite only when needed |
+| **Selector maintenance** | Manual investigation when UI changes break tests | 2-level self-healing (step fallbacks + PageRegistry) recovers at runtime from pre-defined fallbacks; when those run out, Claude suggests repairs for an engineer to review |
+| **CI feedback** | Full suite on every push (~15 min wait) | Smoke gate (34/58 tests, ~5 min) on every push; full suite only when needed |
 | **API confidence** | Status code checks only | JSON Schema contract validation + SLA assertions on every API suite |
 | **Accessibility** | Separate audit tool, run quarterly | Inline `assert_accessible` step in every UI suite, fails the test on violation |
 | **AI output quality** | Generated tests accepted uncritically | `AITestOutput_QualityScorer` evaluates every generation on 4 dimensions (0–100), trend-tracked over time |
 | **Test effectiveness** | No signal on whether tests actually worked at runtime | `TestEffectivenessScorer` scores pass rate, selector stability, flake resistance, and selector coverage after every suite run |
 | **Selector failure recovery** | Engineer debugs DOM manually | `SelfHealSuggester` sends live DOM snapshot to Claude, returns repair suggestions as Allure attachment |
 | **Release governance** | Tests pass/fail but no gate enforced | `QualityGateChecker` blocks release if pass rate drops below 80% or flake rate exceeds 20% |
-| **QA process visibility** | Pass/fail count in CI | Trend dashboard: 5 charts (pass/fail, self-heals, coverage, response time, AI quality score) across 50 runs — auto-committed to `main` after every CI full run |
+| **QA process visibility** | Pass/fail count in CI | Trend dashboard: 4 charts (pass/fail, self-heals, coverage, AI quality score) across 50 runs — auto-committed to `main` after every CI full run |
 | **Secret handling** | Depends on developer discipline | Enforced centrally — `SensitiveDataMasker` scrubs secrets from all reports, HAR files, cURL commands |
 
 ---
@@ -59,17 +61,19 @@ Each feature maps to an engineering or business decision made at the QA Manager 
 
 ## Business Impact
 
+*Estimated impact, based on single-developer runs of this framework — not measured team-wide data.*
+
 | Metric | Without This Framework | With This Framework |
 |---|---|---|
 | Test case authoring | Manual writing by engineers (~30 min per suite) | AI-generated from plain-English stories (~2 min) |
 | New suite onboarding | Hours (framework setup, scaffolding) | Minutes (3-line runner subclass) |
-| Selector breakage recovery | Manual investigation + fix | Automatic self-healing, recorded in report |
+| Selector breakage recovery | Manual investigation + fix | Fallback chains heal known breakages automatically; unknown ones get Claude repair suggestions for human review |
 | CI feedback on PR | Full suite wait (~15 min) | Smoke gate first (~5 min), full suite on merge |
 | API contract regressions | Caught in staging by manual check | Caught on every CI run via JSON Schema assertion |
 | Secret leakage in reports | Depends on developer discipline | Enforced centrally — no secrets ever reach reports |
 | AI generation quality | Unknown — no measurement | Scored 0–100 per run, trended across 50 runs |
 | Failing release detection | Test count only | Pass rate + flake rate gates enforced before deploy |
-| Test run visibility | Pass/fail count only | Per-run agent activity, 5-chart trend dashboard, self-heal count |
+| Test run visibility | Pass/fail count only | Per-run agent activity, 4-chart trend dashboard, self-heal count |
 
 ---
 
@@ -89,9 +93,9 @@ Each feature maps to an engineering or business decision made at the QA Manager 
 | **Full E2E journey coverage** | 5-test Checkout E2E suite: login → browse → add to cart → checkout → confirmation, all smoke-tagged |
 | **Page Object Model** | Logical names in JSON (`login_button`) resolved at runtime via `PageRegistry` — JSON never contains raw CSS |
 | **Test data injection** | `${VAR}` placeholders in steps resolved from `test-data.properties` at runtime |
-| **Smoke-first CI gate** | 32/58 tests tagged `smoke` run on every push/PR (~5 min); full suite only after gate passes |
+| **Smoke-first CI gate** | 34/58 tests tagged `smoke` run on every push/PR (~5 min); full suite only after gate passes |
 | **Agent Activity reporting** | Per-run HTML report: locator resolutions, self-heal events, unknown targets, API calls, quality score, coverage % |
-| **Trend dashboard** | Chart.js HTML dashboard — 5 charts: pass/fail, self-heals, page coverage, avg response time, AI quality score. Committed back to `main` after every CI full run (chromium job, `[skip ci]`) so trend data survives across pipeline runs. |
+| **Trend dashboard** | Chart.js HTML dashboard — 4 charts: pass/fail, self-heals, page coverage, AI quality score. Committed back to `main` after every CI full run (chromium job, `[skip ci]`) so trend data survives across pipeline runs. |
 | **Flake retry** | `IAnnotationTransformer` wires `FlakeRetryAnalyzer` globally — retries `TimeoutError` only, never assertion failures |
 | **Docker multi-browser** | Single image, three parallel containers (chromium/firefox/webkit), results merged into one Allure report |
 | **CI/CD** | GitHub Actions (smoke gate + full suite + Pages deploy) and Jenkins (smoke + full + Allure publish) |
@@ -109,11 +113,11 @@ Each feature maps to an engineering or business decision made at the QA Manager 
 ![Allure Suites](docs/screenshots/allure-suites.png)
 
 ### Self-Healing in Action — Terminal Output
-Intentionally broken selectors auto-recovered at runtime. No test failures, no manual fix needed.
+Intentionally broken selectors recovered at runtime through pre-defined fallback chains — the tests pass and each heal is recorded in the report.
 ![Self-Heal Banner](docs/screenshots/self-heal-banner.png)
 
-### Trend Dashboard — 5 Charts, 50 Runs Tracked
-Built-in Chart.js dashboard tracking pass/fail trends, self-heal frequency, page registry coverage, avg response time, and AI quality score across every run. Automatically committed back to `main` after each CI full run.
+### Trend Dashboard — 4 Charts, 50 Runs Tracked
+Built-in Chart.js dashboard tracking pass/fail trends, self-heal frequency, page registry coverage, and AI quality score across every run. Automatically committed back to `main` after each CI full run.
 ![Trend Dashboard](docs/screenshots/trend-dashboard.png)
 
 ### Agent Activity Report — Locator Resolutions + Masked Secrets
@@ -278,7 +282,7 @@ Every test generation (API MODE or FILE MODE) is scored by `AITestOutput_Quality
 
 **Tier labels:** EXCELLENT (≥90) / GOOD (≥70) / FAIR (≥50) / POOR (≥25) / CRITICAL (<25)
 
-Scores are recorded in `AgentActivity`, persisted in `test-history/runs.json`, and charted in the 4th panel of the trend dashboard. This enables:
+Scores are recorded in `AgentActivity`, persisted in `test-history/runs.json`, and charted in the AI quality panel of the trend dashboard. This enables:
 - A/B comparison of different prompt strategies
 - Alerting when AI generation quality degrades across runs
 - Evidence-based prompt tuning decisions
@@ -316,6 +320,8 @@ Pipeline stages:
 1. `smoke` — Chromium, 34 smoke-tagged tests, fast gate (~5 min). All other containers wait.
 2. `chromium-ui`, `firefox-ui`, `webkit-ui` — UI tests only (29 each), run in parallel after gate
 3. `api` — 29 API tests, runs once (browser-agnostic), also starts after gate
+
+Containers run **in parallel** with each other; tests **inside** each container run serially (`parallel="none"`) for Chromium stability under Rosetta x86 emulation — see Decision #6.
 
 Result: **116 unique test scenarios** in Allure = 29 UI × 3 browsers + 29 API × 1 (correct enterprise view).
 
@@ -359,7 +365,7 @@ Ten decisions with the business rationale behind each:
 | # | Decision | Rationale |
 |---|---|---|
 | 1 | **JSON-only output, no markdown fences** | Claude sometimes wraps output in ` ```json ``` ` — this breaks downstream parsing. Stripping fences is a smell; enforcing plain JSON in the prompt eliminates the problem at the source. |
-| 2 | **3-layer validator + retry (not trust-and-run)** | AI output is probabilistic. Running unvalidated JSON through Playwright fails in unpredictable ways. Explicit schema check + retry with error context catches ~95% of format issues before any browser opens. |
+| 2 | **3-layer validator + retry (not trust-and-run)** | AI output is probabilistic. Running unvalidated JSON through Playwright fails in unpredictable ways. Explicit schema check + retry with error context catches malformed output (bad JSON, disallowed actions, missing fields) before any browser opens. |
 | 3 | **FILE MODE as default (no API key required)** | Lowers barrier to evaluation — a reviewer can clone, run `mvn test`, and see all 58 tests pass without any account setup. API MODE is the production path; FILE MODE is the demo path. |
 | 4 | **Self-healing at two levels, not one** | Step-level `fallback_targets` (defined by Claude per test) and `PageRegistry` fallback chains (maintained by engineers) serve different failure modes. Claude can suggest fallbacks when generating; engineers maintain structural fallbacks centrally. |
 | 5 | **Smoke-first CI gate, not just smoke-only** | Running only smoke tests in CI is common but insufficient — it leaves the full suite as a manual step. The pipeline runs smoke on every push and full suite on merge to main, which is the right balance between speed and confidence. |
@@ -500,8 +506,8 @@ mvn test
 Claude generates fresh test cases on each run. The validator rejects non-conforming JSON and retries once with the error context fed back to Claude. The generated suite is scored by `AITestOutput_QualityScorer` and the score is recorded to the trend dashboard.
 
 Available story files in `src/main/resources/stories/`:
-- `login-story.txt`, `checkout-e2e-story.txt`, `product-detail-story.txt`, `add-to-cart-story.txt`
-- `posts-api-story.txt`, `comments-api-story.txt`, `todos-api-story.txt`
+- UI: `login-story.txt`, `productsPage-story.txt`, `product-detail-story.txt`, `add-to-cart-story.txt`, `checkout-e2e-story.txt`
+- API: `user-api-story.txt`, `posts-api-story.txt`, `comments-api-story.txt`, `todos-api-story.txt`
 
 ---
 
